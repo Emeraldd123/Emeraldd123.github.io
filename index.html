@@ -113,7 +113,14 @@
   .private-note { font: 12px var(--mono); color: var(--muted); }
   .cover.shotcover { height: 200px; }
   .cover.shotcover img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; }
-  .shotstack { display: grid; gap: 14px; }
+  .slides { position: relative; aspect-ratio: 2000 / 1004; overflow: hidden; background: #111; }
+  .slides img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: 0; transition: opacity .7s ease; }
+  .slides img.on { opacity: 1; }
+  .slides.shotcover { aspect-ratio: auto; height: 220px; }
+  .slides.shotcover img { object-position: center 12%; }
+  .slides .dots { position: absolute; left: 0; right: 0; bottom: 10px; display: flex; justify-content: center; gap: 6px; z-index: 2; }
+  .slides .dots button { width: 8px; height: 8px; padding: 0; border-radius: 50%; border: 0; background: rgba(255,255,255,.35); cursor: pointer; box-shadow: 0 0 0 1px rgba(0,0,0,.35); }
+  .slides .dots button.on { background: #fff; }
   .cover { height: 132px; border-radius: 10px; margin-bottom: 16px; position: relative; overflow: hidden; border: 1px solid var(--line); }
   .cover.times { background: #efe9dc; color: #1b1a17; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Instrument Serif', serif; }
   .cover.times b { font-size: 30px; font-weight: 400; border-top: 2px solid #1b1a17; border-bottom: 2px solid #1b1a17; padding: 2px 14px; }
@@ -251,7 +258,7 @@
 
 
       <article class="feature" id="finance">
-        <div class="shotstack"><div class="shot"><img src="assets/pipit-heatmap.jpg" alt="Pipit Finance investments page: a portfolio heatmap of holdings with each tile sized by position and colored by daily change" loading="lazy" /></div><div class="shot"><img src="assets/pipit-cashflow.jpg" alt="Pipit Finance cash-flow page: monthly income and expense bars with a net trend line" loading="lazy" /></div></div>
+        <div class="slides shot" data-slides><img src="assets/pipit-investments.jpg" alt="Investments page: portfolio heatmap of holdings colored by daily change (dollar totals blurred)" loading="lazy" class="on" /><img src="assets/pipit-cashflow-full.jpg" alt="Cash Flow page: monthly income vs. expense bars, trend line and a Sankey diagram (amounts blurred)" loading="lazy" /><img src="assets/pipit-insights.jpg" alt="Insights page: net worth compared with a Federal Reserve age-group distribution, and a salary comparison (figures blurred)" loading="lazy" /><div class="dots"></div></div>
         <div>
           <div class="meta"><span class="tag">Pipit Finance</span><span>2026</span><span>Next.js · Prisma · Postgres</span><span>Solo · private</span></div>
           <h3>A full personal-finance platform, connected to real bank accounts.</h3>
@@ -268,7 +275,7 @@
 
       <div class="grid">
         <article class="card" id="bentimes">
-          <div class="cover shotcover"><img src="assets/bentimes-puzzles.jpg" alt="The Ben Times puzzles page with a word-ladder game open over a mini crossword and comic strip" loading="lazy" /></div>
+          <div class="slides cover shotcover" data-slides><img src="assets/bentimes-front.jpg" alt="The Ben Times front page: lead story, weather, homework, the week ahead and flagged emails (personal details blurred)" loading="lazy" class="on" /><img src="assets/bentimes-puzzles.jpg" alt="The Ben Times puzzles page with a word-ladder game open over a mini crossword and comic strip" loading="lazy" /><div class="dots"></div></div>
           <div class="meta"><span class="tag">The Ben Times</span><span>Python</span><span>private</span></div>
           <h3>A personal morning newspaper, with puzzles.</h3>
           <p>A scheduled job reads my Gmail, Calendar, Notion and the weather; Claude writes the copy; it renders as a two-page broadsheet for an old iPad on my desk. It ends with a puzzles page (mini crossword, word ladder, jumble) that's playable on the iPad, and it falls back to a plain edition when the writer fails its checks.</p>
@@ -472,6 +479,18 @@
     }
   } catch (_) { document.getElementById('act-note').textContent = 'recent highlights'; }
 })();
+</script>
+<script>
+document.querySelectorAll('[data-slides]').forEach(function (box) {
+  var imgs = box.querySelectorAll('img'), dots = box.querySelector('.dots'), i = 0, t;
+  if (imgs.length < 2) return;
+  imgs.forEach(function (_, k) { var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Show screenshot ' + (k + 1)); b.onclick = function () { show(k); start(); }; dots.appendChild(b); });
+  function show(k) { imgs[i].classList.remove('on'); dots.children[i].classList.remove('on'); i = k; imgs[i].classList.add('on'); dots.children[i].classList.add('on'); }
+  function start() { clearInterval(t); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) t = setInterval(function () { show((i + 1) % imgs.length); }, 4000); }
+  box.addEventListener('mouseenter', function () { clearInterval(t); });
+  box.addEventListener('mouseleave', start);
+  show(0); start();
+});
 </script>
 </body>
 </html>
