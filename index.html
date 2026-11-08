@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Ben Kadison: neuroscience × software</title>
-<meta name="description" content="Ben Kadison: neuroscience student at the University of Pittsburgh, neurotechnology researcher, and builder of AI tools like MindCode and Pipit Notes." />
+<meta name="description" content="Ben Kadison: neuroscience student at the University of Pittsburgh, neurotechnology researcher, and builder of AI tools like MindCode, Ben's Notes and Pipit Finance." />
 <meta property="og:title" content="Ben Kadison: neuroscience × software" />
 <meta property="og:description" content="I study the brain and build software that shows its thinking." />
 <meta property="og:image" content="assets/mindcode.png" />
@@ -108,6 +108,9 @@
   .card { border: 1px solid var(--line); border-radius: var(--r); background: var(--bg-2); padding: 20px; display: flex; flex-direction: column; scroll-margin-top: 80px; }
   .card h3 { font-size: 26px; }
   .card .links { margin-top: auto; }
+  .fin-cover { aspect-ratio: 16 / 10; background: #0e1412; }
+  .fin-cover svg { display: block; width: 100%; height: 100%; }
+  .private-note { font: 12px var(--mono); color: var(--muted); }
   .cover { height: 132px; border-radius: 10px; margin-bottom: 16px; position: relative; overflow: hidden; border: 1px solid var(--line); }
   .cover.times { background: #efe9dc; color: #1b1a17; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Instrument Serif', serif; }
   .cover.times b { font-size: 30px; font-weight: 400; border-top: 2px solid #1b1a17; border-bottom: 2px solid #1b1a17; padding: 2px 14px; }
@@ -229,16 +232,57 @@
       </article>
 
       <article class="feature" id="pipit">
-        <a class="shot" href="https://bensnotes.netlify.app" target="_blank" rel="noopener"><img src="assets/pipit.png" alt="Pipit Notes: a dark green notebook app with notebooks on the left and a 'A notebook you can live in' prompt" loading="lazy" /></a>
+        <a class="shot" href="https://bensnotes.netlify.app" target="_blank" rel="noopener"><img src="assets/pipit.png" alt="Ben's Notes: a dark green notebook app with notebooks on the left and a 'A notebook you can live in' prompt" loading="lazy" /></a>
         <div>
-          <div class="meta"><span class="tag">Pipit Notes</span><span>2026</span><span>TypeScript · PWA</span><span>Solo</span></div>
+          <div class="meta"><span class="tag">Ben's Notes</span><span>2026</span><span>TypeScript · PWA · 72 commits</span><span>Solo</span></div>
           <h3>A handwriting notebook for iPad that checks your work, offline.</h3>
-          <p>A local-first notes app built for studying: no account, no server, everything on your device. Write with Apple Pencil, annotate PDFs, run Python and LaTeX blocks, and graph equations, including ones you just wrote by hand.</p>
+          <p>A local-first study notebook (also called Pipit Notes): no account and no server, with everything stored in IndexedDB on the device. Write with Apple Pencil, annotate PDFs, and drop in runnable Python, LaTeX and graph blocks. 2D, implicit and rotatable 3D plots render offline, including equations you just lassoed from your own handwriting.</p>
           <ul class="points">
-            <li><b>Check working:</b> the AI reads each handwritten line; <b>SymPy running locally</b> verifies every step follows from the last.</li>
-            <li>Chemistry checks (atoms <i>and</i> charge balance), FSRS flashcards and realistic practice exams.</li>
+            <li><b>Check working:</b> Claude reads each handwritten line, and <b>SymPy running in the browser (Pyodide)</b> verifies that every step follows from the last.</li>
+            <li><b>Review for mistakes</b> across whole notes: every error is highlighted on the page with why it's wrong and the fix, and is logged by type so you can spot patterns.</li>
+            <li>Study engine: <b>FSRS-5</b> spaced repetition (Anki's scheduler), Duolingo-style lessons, concept maps colored by what you know, and timed practice exams that pull graphs and diagrams from your own PDFs, with mixed local and AI marking.</li>
           </ul>
           <div class="links"><a href="https://bensnotes.netlify.app" target="_blank" rel="noopener">Open the app ↗</a><a href="https://github.com/Emeraldd123/pipit-notes" target="_blank" rel="noopener">Code ↗</a></div>
+        </div>
+      </article>
+
+
+      <article class="feature" id="finance">
+        <div class="shot fin-cover" role="img" aria-label="Pipit Finance: a net-worth chart above a cash-flow diagram from income into spending categories">
+          <svg viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="400" fill="#0e1412"/>
+            <rect x="0" y="0" width="132" height="400" fill="#121a17"/>
+            <circle cx="30" cy="32" r="9" fill="#2fc896"/><text x="46" y="37" fill="#e8efe9" font-family="Inter,sans-serif" font-size="14" font-weight="600">Pipit</text>
+            <g font-family="Inter,sans-serif" font-size="11.5" fill="#7d8a84"><text x="22" y="84" fill="#e8efe9">Overview</text><text x="22" y="112">Transactions</text><text x="22" y="140">Budget</text><text x="22" y="168">Recurring</text><text x="22" y="196">Investments</text><text x="22" y="224">Goals</text><text x="22" y="252">Reports</text><text x="22" y="280">Insights</text></g>
+            <rect x="14" y="70" width="104" height="22" rx="6" fill="#2fc896" opacity=".12"/>
+            <text x="156" y="44" fill="#7d8a84" font-family="Inter,sans-serif" font-size="11">NET WORTH</text>
+            <text x="156" y="74" fill="#e8efe9" font-family="Inter,sans-serif" font-size="26" font-weight="600">$48,210</text>
+            <text x="290" y="74" fill="#2fc896" font-family="Inter,sans-serif" font-size="12">▲ 6.4% this quarter</text>
+            <defs><linearGradient id="fg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2fc896" stop-opacity=".35"/><stop offset="1" stop-color="#2fc896" stop-opacity="0"/></linearGradient></defs>
+            <path d="M156 170 L196 160 L236 164 L276 146 L316 150 L356 128 L396 132 L436 112 L476 118 L516 98 L556 92 L612 80 L612 190 L156 190Z" fill="url(#fg)"/>
+            <polyline points="156,170 196,160 236,164 276,146 316,150 356,128 396,132 436,112 476,118 516,98 556,92 612,80" fill="none" stroke="#2fc896" stroke-width="2.5"/>
+            <text x="156" y="226" fill="#7d8a84" font-family="Inter,sans-serif" font-size="11">CASH FLOW · OCTOBER</text>
+            <rect x="160" y="246" width="12" height="130" rx="2" fill="#8ea8ff"/>
+            <g fill="none" stroke-opacity=".38">
+              <path d="M172 266 C 330 266, 330 258, 488 258" stroke="#e58a3a" stroke-width="40"/>
+              <path d="M172 309 C 330 309, 330 302, 488 302" stroke="#e3b341" stroke-width="30"/>
+              <path d="M172 340 C 330 340, 330 336, 488 336" stroke="#c779d0" stroke-width="20"/>
+              <path d="M172 363 C 330 363, 330 368, 488 368" stroke="#2fc896" stroke-width="26"/>
+            </g>
+            <g font-family="Inter,sans-serif" font-size="11" fill="#c9d3ce"><text x="498" y="262">Housing</text><text x="498" y="306">Food</text><text x="498" y="340">Transport</text><text x="498" y="372">Saved</text></g>
+          </svg>
+        </div>
+        <div>
+          <div class="meta"><span class="tag">Pipit Finance</span><span>2026</span><span>Next.js · Prisma · Postgres</span><span>Solo · private</span></div>
+          <h3>A full personal-finance platform, connected to real bank accounts.</h3>
+          <p>A budgeting and net-worth app in the spirit of Monarch or Copilot, built end to end: about 440 files, 38 database models and 88 commits. Bank accounts sync through <b>Plaid</b> and subscriptions bill through <b>Stripe</b>.</p>
+          <ul class="points">
+            <li><b>Bank sync:</b> Plaid Link and incremental transaction sync, with <b>signature-verified webhooks</b> (JWT). Access tokens are encrypted at rest with <b>AES-256-GCM</b>.</li>
+            <li><b>Security:</b> NextAuth sessions, <b>TOTP two-factor auth</b> with QR enrolment, rate limiting, and Zod validation on server input.</li>
+            <li><b>Money logic:</b> a rules engine and auto-categorizer, recurring-charge detection, budgets, shared household goals, investment history, cash-balance forecasts and net-worth projections.</li>
+            <li><b>Reports:</b> Sankey cash-flow diagrams (d3-sankey), spending reports, salary benchmarks, CSV import and export, and scheduled snapshot and alert jobs with email through Resend.</li>
+          </ul>
+          <div class="links"><span class="private-note">Private repo: code walkthrough on request</span></div>
         </div>
       </article>
 
@@ -315,7 +359,7 @@
       <div class="sec-head"><h2>Lately on GitHub</h2><p id="act-note">live from the GitHub API</p></div>
       <div class="activity" id="activity-list">
         <a class="ev" href="https://github.com/Emeraldd123/MindCode" target="_blank" rel="noopener"><span class="t">Nov 2026</span><span class="m">Shipped MindCode's final release at NOVA</span><span class="r">MindCode</span></a>
-        <a class="ev" href="https://github.com/Emeraldd123/pipit-notes" target="_blank" rel="noopener"><span class="t">Nov 2026</span><span class="m">Pipit Notes: graphing, practice exams, FSRS</span><span class="r">pipit-notes</span></a>
+        <a class="ev" href="https://github.com/Emeraldd123/pipit-notes" target="_blank" rel="noopener"><span class="t">Nov 2026</span><span class="m">Ben's Notes: graphing, practice exams, FSRS</span><span class="r">pipit-notes</span></a>
       </div>
     </div>
   </section>
@@ -362,10 +406,11 @@
     { id: 'emg', label: 'Motor-unit EMG', x: 112, y: 46, r: 7, c: 'brain', go: '#emg' },
     { id: 'babson', label: 'Diagnostics R&D', x: 240, y: 52, r: 7, c: 'brain', go: '#babson' },
     { id: 'mindcode', label: 'MindCode', x: 470, y: 228, r: 8, c: 'build', go: '#mindcode' },
-    { id: 'pipit', label: 'Pipit Notes', x: 506, y: 74, r: 7, c: 'build', go: '#pipit' },
+    { id: 'pipit', label: "Ben's Notes", x: 506, y: 74, r: 7, c: 'build', go: '#pipit' },
+    { id: 'finance', label: 'Pipit Finance', x: 516, y: 156, r: 7, c: 'build', go: '#finance' },
     { id: 'times', label: 'The Ben Times', x: 352, y: 42, r: 6, c: 'build', go: '#bentimes' },
-    { id: 'nfl', label: 'NFL Edge', x: 500, y: 330, r: 6, c: 'build', go: '#nfl' },
-    { id: 'board', label: 'Agent board', x: 400, y: 330, r: 6, c: 'build', go: '#board' },
+    { id: 'nfl', label: 'NFL Edge', x: 512, y: 356, r: 6, c: 'build', go: '#nfl' },
+    { id: 'board', label: 'Agent board', x: 368, y: 316, r: 6, c: 'build', go: '#board' },
     { id: 'ml', label: 'Machine learning', x: 170, y: 352, r: 6, c: 'skill' },
     { id: 'python', label: 'Python', x: 290, y: 410, r: 6, c: 'skill' },
     { id: 'agents', label: 'AI agents', x: 420, y: 418, r: 6, c: 'skill' },
@@ -379,6 +424,7 @@
     ['fog', 'ml'], ['fog', 'signals'], ['fog', 'python'], ['emg', 'signals'], ['babson', 'lab'], ['babson', 'python'],
     ['nfl', 'ml'], ['nfl', 'python'], ['times', 'python'], ['times', 'agents'], ['mindcode', 'agents'], ['board', 'agents'],
     ['pipit', 'python'], ['mindcode', 'board'], ['pipit', 'agents'],
+    ['buildhub', 'finance'], ['finance', 'agents'],
   ];
   const svg = document.getElementById('constellation');
   const NS = 'http://www.w3.org/2000/svg';
