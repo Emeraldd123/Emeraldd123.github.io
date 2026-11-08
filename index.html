@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ben Kadison: neuroscience × software</title>
+<meta name="description" content="Ben Kadison: neuroscience student at the University of Pittsburgh, neurotechnology researcher, and builder of AI tools like MindCode and Pipit Notes." />
+<meta property="og:title" content="Ben Kadison: neuroscience × software" />
+<meta property="og:description" content="I study the brain and build software that shows its thinking." />
+<meta property="og:image" content="assets/mindcode.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #161514;
+    --bg-2: #1d1c1a;
+    --panel: #22211f;
+    --line: rgba(255, 255, 255, 0.08);
+    --line-2: rgba(255, 255, 255, 0.14);
+    --text: #ece9e3;
+    --muted: #a8a49c;
+    --dim: #6f6b64;
+    --brain: #e58a3a;   /* neuroscience / research */
+    --build: #2fc896;   /* software / AI */
+    --skill: #8ea8ff;   /* skills */
+    --serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+    --sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --r: 14px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  ::selection { background: rgba(47, 200, 150, 0.35); }
+  .wrap { width: min(1160px, 100% - 32px); margin-inline: auto; }
+
+  /* Nav */
+  header.nav { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(10px); background: rgba(22, 21, 20, 0.78); border-bottom: 1px solid var(--line); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; gap: 16px; }
+  .brand { font-family: var(--mono); font-size: 14px; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+  .brand .dot { width: 9px; height: 9px; border-radius: 50%; background: linear-gradient(135deg, var(--brain), var(--build)); box-shadow: 0 0 12px rgba(47, 200, 150, 0.6); }
+  .brand span { color: var(--dim); }
+  .nav nav { display: flex; gap: 22px; font-family: var(--mono); font-size: 13px; }
+  .nav nav a { text-decoration: none; color: var(--muted); }
+  .nav nav a:hover { color: var(--text); }
+
+  /* Hero */
+  .hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 32px; align-items: center; padding: 72px 0 40px; }
+  .eyebrow { font-family: var(--mono); font-size: 12.5px; color: var(--muted); letter-spacing: 0.04em; display: flex; flex-wrap: wrap; gap: 8px 14px; }
+  .eyebrow .pill { display: inline-flex; align-items: center; gap: 7px; }
+  .eyebrow .pill i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(44px, 6.2vw, 82px); line-height: 0.98; letter-spacing: -0.02em; margin: 18px 0 20px; }
+  h1 em { color: var(--build); }
+  h1 .b { color: var(--brain); font-style: italic; }
+  .lede { color: var(--muted); font-size: 18px; max-width: 34em; margin: 0 0 26px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; font: 500 14px var(--sans); text-decoration: none; border: 1px solid var(--line-2); color: var(--text); transition: transform .15s ease, background .15s ease; }
+  .btn:hover { transform: translateY(-1px); background: rgba(255, 255, 255, 0.04); }
+  .btn.primary { background: var(--text); color: #141312; border-color: transparent; }
+  .btn.primary:hover { background: #fff; }
+
+  /* Constellation */
+  .map-card { position: relative; border: 1px solid var(--line); border-radius: 20px; background:
+      radial-gradient(60% 60% at 50% 45%, rgba(47, 200, 150, 0.07), transparent 70%),
+      radial-gradient(40% 40% at 25% 70%, rgba(229, 138, 58, 0.07), transparent 70%), var(--bg-2); overflow: hidden; }
+  .map-card svg { width: 100%; height: auto; display: block; }
+  .map-hint { position: absolute; left: 14px; bottom: 12px; font: 11.5px var(--mono); color: var(--dim); }
+  .map-legend { position: absolute; right: 14px; bottom: 12px; display: flex; gap: 12px; font: 11.5px var(--mono); color: var(--muted); }
+  .map-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+  .edge { stroke: rgba(255, 255, 255, 0.10); stroke-width: 1; transition: stroke .2s ease, opacity .2s ease; }
+  .node { cursor: pointer; }
+  .node circle { transition: r .2s ease, opacity .2s ease; }
+  .node text { font: 12px var(--sans); fill: var(--muted); transition: fill .2s ease, opacity .2s ease; pointer-events: none; }
+  .node.hub text { font: 600 13px var(--sans); fill: var(--text); }
+  .node.center text { font: 400 22px var(--serif); fill: var(--text); }
+  .dimmed { opacity: 0.18; }
+  .lit .edge-on, .edge.on { stroke: rgba(255, 255, 255, 0.55); stroke-width: 1.4; }
+  .node.on text { fill: var(--text); }
+  @media (prefers-reduced-motion: no-preference) {
+    .float { animation: float 7s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(0, -4px); } }
+  }
+
+  /* Sections */
+  section { padding: 64px 0; border-top: 1px solid var(--line); }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+  h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(34px, 4vw, 48px); margin: 0; letter-spacing: -0.01em; }
+  .sec-head p { margin: 0; color: var(--muted); font-family: var(--mono); font-size: 13px; }
+
+  /* Work */
+  .feature { display: grid; grid-template-columns: 1.25fr 1fr; gap: 28px; align-items: start; padding: 22px; border: 1px solid var(--line); border-radius: 20px; background: var(--bg-2); margin-bottom: 22px; scroll-margin-top: 80px; }
+  .feature .shot { border-radius: 12px; overflow: hidden; border: 1px solid var(--line-2); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8); }
+  .feature h3, .card h3 { font-family: var(--serif); font-weight: 400; font-size: 32px; line-height: 1.05; margin: 6px 0 10px; }
+  .meta { font: 12.5px var(--mono); color: var(--dim); display: flex; flex-wrap: wrap; gap: 6px 12px; }
+  .meta .tag { color: var(--build); }
+  .meta .tag.brain { color: var(--brain); }
+  .feature p, .card p { color: var(--muted); margin: 0 0 12px; }
+  ul.points { margin: 0 0 16px; padding-left: 18px; color: var(--muted); }
+  ul.points li { margin: 4px 0; }
+  ul.points b { color: var(--text); font-weight: 500; }
+  .links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .links a { font: 13px var(--mono); text-decoration: none; padding: 6px 11px; border: 1px solid var(--line-2); border-radius: 999px; color: var(--text); }
+  .links a:hover { border-color: var(--build); color: var(--build); }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card { border: 1px solid var(--line); border-radius: var(--r); background: var(--bg-2); padding: 20px; display: flex; flex-direction: column; scroll-margin-top: 80px; }
+  .card h3 { font-size: 26px; }
+  .card .links { margin-top: auto; }
+  .cover { height: 132px; border-radius: 10px; margin-bottom: 16px; position: relative; overflow: hidden; border: 1px solid var(--line); }
+  .cover.times { background: #efe9dc; color: #1b1a17; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Instrument Serif', serif; }
+  .cover.times b { font-size: 30px; font-weight: 400; border-top: 2px solid #1b1a17; border-bottom: 2px solid #1b1a17; padding: 2px 14px; }
+  .cover.times small { font: 10px var(--mono); letter-spacing: .14em; margin-top: 6px; }
+  .cover.nfl { background: repeating-linear-gradient(90deg, #1c4d2b 0 38px, #1f5530 38px 76px); }
+  .cover.nfl svg { position: absolute; inset: 0; }
+  .cover.board { background: #0f1115; font: 11px/1.5 var(--mono); color: #9aa4b2; padding: 12px; }
+  .cover.board .mt { color: var(--build); }
+  .cover.board .ma { color: #e3b341; }
+
+  /* Research */
+  .research { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .stat { font-family: var(--serif); font-size: 44px; line-height: 1; color: var(--text); }
+  .stat small { font: 12px var(--mono); color: var(--dim); display: block; margin-top: 6px; }
+  .stats { display: flex; gap: 22px; margin: 14px 0 6px; flex-wrap: wrap; }
+
+  /* Experience */
+  .timeline { display: grid; gap: 0; }
+  .row { display: grid; grid-template-columns: 190px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .row:last-child { border-bottom: 0; }
+  .row .when { font: 12.5px var(--mono); color: var(--dim); padding-top: 4px; }
+  .row h4 { margin: 0; font-weight: 600; font-size: 16px; }
+  .row h4 span { color: var(--muted); font-weight: 400; }
+  .row p { margin: 4px 0 0; color: var(--muted); }
+
+  /* Activity */
+  .activity { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .ev { display: flex; gap: 12px; align-items: baseline; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg-2); font-size: 14px; text-decoration: none; }
+  .ev:hover { border-color: var(--line-2); }
+  .ev .t { font: 12px var(--mono); color: var(--dim); white-space: nowrap; }
+  .ev { min-width: 0; }
+  .ev .m { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1 1 auto; min-width: 0; }
+  .ev .r { font: 12px var(--mono); color: var(--build); white-space: nowrap; }
+
+  /* About */
+  .about { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; }
+  .about p { color: var(--muted); font-size: 17px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips span { font: 12.5px var(--mono); padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--muted); }
+  .chips span.b { border-color: rgba(229, 138, 58, 0.4); }
+  .chips span.g { border-color: rgba(47, 200, 150, 0.4); }
+  h5 { font: 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--dim); margin: 18px 0 10px; font-weight: 500; }
+
+  footer { border-top: 1px solid var(--line); padding: 48px 0 64px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: end; }
+  footer .big { font-family: var(--serif); font-size: clamp(32px, 4vw, 48px); line-height: 1.05; }
+  footer .small { font: 12px var(--mono); color: var(--dim); }
+
+  @media (max-width: 900px) {
+    .hero, .feature, .about { grid-template-columns: 1fr; }
+    .grid, .research { grid-template-columns: 1fr; }
+    .activity { grid-template-columns: 1fr; }
+    .row { grid-template-columns: 1fr; gap: 4px; }
+    .nav nav { gap: 14px; }
+    .hero { padding-top: 44px; }
+  }
+  @media (max-width: 640px) {
+    .brand span { display: none; }
+    .brand { white-space: nowrap; }
+    .nav nav { gap: 12px; font-size: 12.5px; }
+    .nav nav a:nth-child(n+4) { display: none; }
+    .map-legend { display: none; }
+    .feature { padding: 14px; }
+    .sec-head { margin-bottom: 18px; }
+  }
+  html, body { overflow-x: hidden; }
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><i class="dot"></i>ben kadison <span>/ neuro × software</span></a>
+    <nav aria-label="Sections">
+      <a href="#work">work</a><a href="#research">research</a><a href="#experience">experience</a><a href="#about">about</a><a href="#contact">contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div>
+      <div class="eyebrow">
+        <span class="pill"><i style="background:var(--brain)"></i>Neuroscience @ Pitt · Frederick Honors</span>
+        <span class="pill"><i style="background:var(--build)"></i>Neurotech research @ CMU</span>
+      </div>
+      <h1>I study the <span class="b">brain</span> and build software that <em>shows its thinking.</em></h1>
+      <p class="lede">I'm Ben, a neuroscience student who builds AI tools. My research models movement and the nervous system; my side projects make AI more transparent, from mapping every assumption a coding model makes to a notebook that checks your math step by step.</p>
+      <div class="cta">
+        <a class="btn primary" href="#work">See the work ↓</a>
+        <a class="btn" href="https://github.com/Emeraldd123" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="https://www.linkedin.com/in/ben-kadison-4475a22b0/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+    </div>
+    <div class="map-card" aria-label="Interactive map of Ben's projects, research and skills">
+      <svg id="constellation" viewBox="0 0 560 470" role="img" aria-labelledby="mapTitle"><title id="mapTitle">Map of projects, research and skills. Hover a node to see what connects.</title></svg>
+      <div class="map-hint">hover to trace · click to jump</div>
+      <div class="map-legend"><span><i style="background:var(--brain)"></i>research</span><span><i style="background:var(--build)"></i>builds</span><span><i style="background:var(--skill)"></i>skills</span></div>
+    </div>
+  </div>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head"><h2>Selected work</h2><p>software · AI · tools I use daily</p></div>
+
+      <article class="feature" id="mindcode">
+        <a class="shot" href="https://mindcode1.netlify.app/?demo=1" target="_blank" rel="noopener"><img src="assets/mindcode.png" alt="MindCode: chat on the left, a tree of 35 planned bubbles in the middle, the generated app on the right" loading="lazy" /></a>
+        <div>
+          <div class="meta"><span class="tag">MindCode</span><span>Nov 2026</span><span>NOVA hackathon · ScottyLabs, CMU</span><span>Team lead</span></div>
+          <h3>Every assumption an AI makes, as a map you can edit before it builds.</h3>
+          <p>When AI builds an app, it silently decides dozens of things you never asked for. MindCode turns your idea into a full plan: pages, features, APIs, design, audience and cost, colored by what <i>you</i> said vs. what Claude <i>assumed</i> vs. what's still open. Then it builds the app and traces every element back to the bubble that caused it.</p>
+          <ul class="points">
+            <li>Designed the <b>prompt-engineering framework</b> (Design / Audience / Functionality / Cost) that structures every plan.</li>
+            <li>Led <b>4 people and a team of AI coding agents</b> (Claude Code, Google Antigravity, Jules) through a shared task board, cross-review and a 15-deploy budget.</li>
+            <li>Right-click any part of the generated site to change it (<b>~7 s</b>, via patch edits); small plan changes rebuild in <b>~20 s</b>.</li>
+          </ul>
+          <div class="links"><a href="https://mindcode1.netlify.app/?demo=1" target="_blank" rel="noopener">Live demo ↗</a><a href="https://github.com/Emeraldd123/MindCode" target="_blank" rel="noopener">Code ↗</a></div>
+        </div>
+      </article>
+
+      <article class="feature" id="pipit">
+        <a class="shot" href="https://bensnotes.netlify.app" target="_blank" rel="noopener"><img src="assets/pipit.png" alt="Pipit Notes: a dark green notebook app with notebooks on the left and a 'A notebook you can live in' prompt" loading="lazy" /></a>
+        <div>
+          <div class="meta"><span class="tag">Pipit Notes</span><span>2026</span><span>TypeScript · PWA</span><span>Solo</span></div>
+          <h3>A handwriting notebook for iPad that checks your work, offline.</h3>
+          <p>A local-first notes app built for studying: no account, no server, everything on your device. Write with Apple Pencil, annotate PDFs, run Python and LaTeX blocks, and graph equations, including ones you just wrote by hand.</p>
+          <ul class="points">
+            <li><b>Check working:</b> the AI reads each handwritten line; <b>SymPy running locally</b> verifies every step follows from the last.</li>
+            <li>Chemistry checks (atoms <i>and</i> charge balance), FSRS flashcards and realistic practice exams.</li>
+          </ul>
+          <div class="links"><a href="https://bensnotes.netlify.app" target="_blank" rel="noopener">Open the app ↗</a><a href="https://github.com/Emeraldd123/pipit-notes" target="_blank" rel="noopener">Code ↗</a></div>
+        </div>
+      </article>
+
+      <div class="grid">
+        <article class="card" id="bentimes">
+          <div class="cover times" aria-hidden="true"><b>The Ben Times</b><small>DAILY · AUTOMATED · EST. 2026</small></div>
+          <div class="meta"><span class="tag">The Ben Times</span><span>Python</span><span>private</span></div>
+          <h3>A personal morning newspaper.</h3>
+          <p>A scheduled job reads my Gmail, Calendar, Notion and the weather; Claude writes the copy; it renders as a two-page broadsheet for an old iPad on my desk. It falls back to a plain edition when the writer fails its checks.</p>
+        </article>
+        <article class="card" id="nfl">
+          <div class="cover nfl" aria-hidden="true"><svg viewBox="0 0 300 132" preserveAspectRatio="none"><polyline points="0,100 40,92 80,96 120,70 160,74 200,52 240,58 300,30" fill="none" stroke="#f4f1ea" stroke-width="2.5"/><polyline points="0,104 40,100 80,102 120,92 160,90 200,84 240,86 300,78" fill="none" stroke="rgba(244,241,234,.45)" stroke-width="1.5" stroke-dasharray="5 4"/></svg></div>
+          <div class="meta"><span class="tag">NFL Edge</span><span>Python</span><span>private</span></div>
+          <h3>Predicting games, tested against Vegas.</h3>
+          <p>A model of NFL game outcomes, backtested against historical betting lines to see where it would have found an edge, and where it wouldn't.</p>
+        </article>
+        <article class="card" id="board">
+          <div class="cover board" aria-hidden="true"><div><span class="mt">[Ben's Claude]</span> @agents plan is up: PR #2</div><div><span class="ma">[Ben's Antigravity]</span> reviewing #2</div><div><span class="mt">[Ben's Claude]</span> merged #14 → deploy 2/15</div><div style="color:#6f6b64">▍ tools/board wait…</div></div>
+          <div class="meta"><span class="tag">Agent board</span><span>Bash · GitHub</span><span>open source</span></div>
+          <h3>Getting AI agents to work as a team.</h3>
+          <p>A shared GitHub-issue "board" that lets several coding agents claim tasks, tag each other, review each other's PRs and hand off work. It's the system I used to run MindCode's build.</p>
+          <div class="links"><a href="https://github.com/Emeraldd123/MindCode/issues/1" target="_blank" rel="noopener">See the real board ↗</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section id="research">
+    <div class="wrap">
+      <div class="sec-head"><h2>Research</h2><p>neuroscience · ML · diagnostics</p></div>
+      <div class="research">
+        <article class="card" id="fog">
+          <div class="meta"><span class="tag brain">Parkinson's · ML</span><span>UT Austin · 2025</span></div>
+          <h3>Predicting freezing of gait before it happens.</h3>
+          <p>An ML framework that predicts Freezing of Gait in Parkinson's seconds before onset, from wearable accelerometer data (Daphnet). 74 engineered biomechanical features; XGBoost, CatBoost and deep sequence models under leave-one-subject-out validation; SHAP to check the predictors are physiologically meaningful.</p>
+          <div class="stats"><div class="stat">90%<small>recall</small></div><div class="stat">82%<small>F1 (XGBoost)</small></div></div>
+          <p><b style="color:var(--text);font-weight:500">Regeneron Biomedical Science Award</b> and 1st place, Greater Austin Regional Science Fair. Acknowledged contributor, <i>British Journal of Multidisciplinary and Advanced Studies</i> (2025).</p>
+        </article>
+        <article class="card" id="emg">
+          <div class="meta"><span class="tag brain">Neurotechnology</span><span>CMU · Beauchamp Lab · 2026–now</span></div>
+          <h3>Listening to motor neurons through the skin.</h3>
+          <p>Recruited as a Pitt freshman to Dr. Drew Beauchamp's lab (Biomedical Engineering and the Neuroscience Institute). I decompose high-density surface EMG in MATLAB into individual motor-unit firing patterns, to understand how spinal motoneurons relate to signals from the cortex and subcortex.</p>
+          <div class="links"><a href="https://beauchamplab.org/" target="_blank" rel="noopener">The lab ↗</a></div>
+        </article>
+        <article class="card" id="babson">
+          <div class="meta"><span class="tag brain">Diagnostics</span><span>Babson Diagnostics · 2025–26</span></div>
+          <h3>First high-school intern in company history.</h3>
+          <p>R&amp;D scientist intern across wet and dry lab work: built reference ranges from real patient data, designed experiments for neuro and testosterone assays, wrote SOPs, and supported the data-to-FDA pipeline.</p>
+          <div class="stats"><div class="stat">700k<small>patient samples analyzed</small></div><div class="stat">−20%<small>assay waste</small></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="wrap">
+      <div class="sec-head"><h2>Experience</h2><p>research · industry · leadership</p></div>
+      <div class="timeline">
+        <div class="row"><div class="when">Aug 2026 — now</div><div><h4>Neurotechnology Researcher <span>· Carnegie Mellon, Beauchamp Lab</span></h4><p>High-density surface EMG decomposition and motor-unit analysis in MATLAB.</p></div></div>
+        <div class="row"><div class="when">2026 — now</div><div><h4>Founder <span>· Kadison Research</span></h4><p>Pre-med and biotech mentorship for high school students navigating research, internships and pre-med paths.</p></div></div>
+        <div class="row"><div class="when">May 2025 — Jul 2026</div><div><h4>R&amp;D Scientist Intern <span>· Babson Diagnostics, Austin</span></h4><p>Reference ranges from 700k+ samples, −20% assay waste, deliverables for two Fortune 500 partners, FDA data pipeline. Rural-health research for the board contributed to a $50K state initiative award.</p></div></div>
+        <div class="row"><div class="when">May — Jul 2025</div><div><h4>Research Fellow <span>· UT Austin High School Research Academy</span></h4><p>Freezing-of-Gait prediction in Parkinson's with wearable sensors and ML (mentor: Prof. Patrick Benfield).</p></div></div>
+        <div class="row"><div class="when">Jul 2025</div><div><h4>Emergency Relief Coordinator <span>· Central Texas floods</span></h4><p>Coordinated logistics, volunteer teams and thousands of donated supplies for displaced families.</p></div></div>
+        <div class="row"><div class="when">Dec 2024</div><div><h4>RAC Advocacy Fellow <span>· Washington, D.C.</span></h4><p>Co-authored and delivered a legislative advocacy speech to members of Congress.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTIVITY -->
+  <section id="activity">
+    <div class="wrap">
+      <div class="sec-head"><h2>Lately on GitHub</h2><p id="act-note">live from the GitHub API</p></div>
+      <div class="activity" id="activity-list">
+        <a class="ev" href="https://github.com/Emeraldd123/MindCode" target="_blank" rel="noopener"><span class="t">Nov 2026</span><span class="m">Shipped MindCode's final release at NOVA</span><span class="r">MindCode</span></a>
+        <a class="ev" href="https://github.com/Emeraldd123/pipit-notes" target="_blank" rel="noopener"><span class="t">Nov 2026</span><span class="m">Pipit Notes: graphing, practice exams, FSRS</span><span class="r">pipit-notes</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="wrap about">
+      <div>
+        <div class="sec-head"><h2>About</h2></div>
+        <p>I'm studying neuroscience (bioengineering minor) at the University of Pittsburgh in the Frederick Honors College. I'm drawn to the place where biology meets computation: decoding what the nervous system is doing, and building tools that make complex systems, from muscles to AI models, easier to understand.</p>
+        <p>Outside the lab I build things I actually use every day, I mentor students through research and pre-med paths, and I'll organize a relief effort when my community needs one.</p>
+      </div>
+      <div>
+        <h5>Computational</h5>
+        <div class="chips"><span class="g">Python</span><span class="g">TypeScript</span><span class="g">MATLAB</span><span class="g">Pandas · scikit-learn</span><span class="g">XGBoost · SHAP</span><span class="g">Time-series &amp; EMG</span><span class="g">LLM apps · AI agents</span><span class="g">React · Netlify</span></div>
+        <h5>Laboratory</h5>
+        <div class="chips"><span class="b">Assay development</span><span class="b">Experimental design</span><span class="b">SOP authoring</span><span class="b">Clinical data</span><span class="b">Gel electrophoresis</span><span class="b">Micropipetting</span></div>
+        <h5>Certifications</h5>
+        <div class="chips"><span>Python for Data Science, AI &amp; Dev · IBM</span><span>Medical Terminology I–III · Rice</span><span>Health IT Fundamentals · Johns Hopkins</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <div>
+      <div class="big">Let's talk research,<br />or build something.</div>
+      <div class="links" style="margin-top:18px"><a href="mailto:bek229@pitt.edu">bek229@pitt.edu</a><a href="https://www.linkedin.com/in/ben-kadison-4475a22b0/" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://github.com/Emeraldd123" target="_blank" rel="noopener">GitHub ↗</a></div>
+    </div>
+    <div class="small">© 2026 Ben Kadison · built with plain HTML, hosted on GitHub Pages</div>
+  </div>
+</footer>
+
+<script>
+// ---------- Constellation: projects, research and skills, and how they connect ----------
+(function () {
+  const C = { brain: '#e58a3a', build: '#2fc896', skill: '#8ea8ff', center: '#ece9e3' };
+  const nodes = [
+    { id: 'ben', label: 'Ben', x: 280, y: 228, r: 30, kind: 'center' },
+    { id: 'neuro', label: 'Neuroscience', x: 150, y: 120, r: 9, kind: 'hub', c: 'brain' },
+    { id: 'buildhub', label: 'Building', x: 412, y: 118, r: 9, kind: 'hub', c: 'build' },
+    { id: 'fog', label: "Parkinson's gait ML", x: 70, y: 220, r: 7, c: 'brain', go: '#fog' },
+    { id: 'emg', label: 'Motor-unit EMG', x: 112, y: 46, r: 7, c: 'brain', go: '#emg' },
+    { id: 'babson', label: 'Diagnostics R&D', x: 240, y: 52, r: 7, c: 'brain', go: '#babson' },
+    { id: 'mindcode', label: 'MindCode', x: 470, y: 228, r: 8, c: 'build', go: '#mindcode' },
+    { id: 'pipit', label: 'Pipit Notes', x: 506, y: 74, r: 7, c: 'build', go: '#pipit' },
+    { id: 'times', label: 'The Ben Times', x: 352, y: 42, r: 6, c: 'build', go: '#bentimes' },
+    { id: 'nfl', label: 'NFL Edge', x: 500, y: 330, r: 6, c: 'build', go: '#nfl' },
+    { id: 'board', label: 'Agent board', x: 400, y: 330, r: 6, c: 'build', go: '#board' },
+    { id: 'ml', label: 'Machine learning', x: 170, y: 352, r: 6, c: 'skill' },
+    { id: 'python', label: 'Python', x: 290, y: 410, r: 6, c: 'skill' },
+    { id: 'agents', label: 'AI agents', x: 420, y: 418, r: 6, c: 'skill' },
+    { id: 'signals', label: 'Signal processing', x: 54, y: 330, r: 6, c: 'skill' },
+    { id: 'lab', label: 'Wet lab', x: 190, y: 268, r: 5, c: 'skill' },
+  ];
+  const edges = [
+    ['ben', 'neuro'], ['ben', 'buildhub'],
+    ['neuro', 'fog'], ['neuro', 'emg'], ['neuro', 'babson'],
+    ['buildhub', 'mindcode'], ['buildhub', 'pipit'], ['buildhub', 'times'], ['buildhub', 'nfl'], ['buildhub', 'board'],
+    ['fog', 'ml'], ['fog', 'signals'], ['fog', 'python'], ['emg', 'signals'], ['babson', 'lab'], ['babson', 'python'],
+    ['nfl', 'ml'], ['nfl', 'python'], ['times', 'python'], ['times', 'agents'], ['mindcode', 'agents'], ['board', 'agents'],
+    ['pipit', 'python'], ['mindcode', 'board'], ['pipit', 'agents'],
+  ];
+  const svg = document.getElementById('constellation');
+  const NS = 'http://www.w3.org/2000/svg';
+  const by = Object.fromEntries(nodes.map((n) => [n.id, n]));
+  const el = (t, a) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const eg = el('g', {}); svg.appendChild(eg);
+  const edgeEls = edges.map(([a, b]) => { const A = by[a], B = by[b]; const l = el('line', { x1: A.x, y1: A.y, x2: B.x, y2: B.y, class: 'edge' }); l.dataset.a = a; l.dataset.b = b; eg.appendChild(l); return l; });
+  const nodeEls = {};
+  nodes.forEach((n, i) => {
+    const g = el('g', { class: 'node ' + (n.kind || '') + (n.kind === 'center' ? '' : ' float'), tabindex: n.go ? 0 : -1, role: n.go ? 'link' : 'img', 'aria-label': n.label });
+    g.style.animationDelay = (i * 0.37) + 's';
+    const col = n.kind === 'center' ? C.center : C[n.c];
+    if (n.kind === 'center') {
+      g.appendChild(el('circle', { cx: n.x, cy: n.y, r: n.r + 14, fill: 'none', stroke: 'rgba(255,255,255,.08)' }));
+      g.appendChild(el('circle', { cx: n.x, cy: n.y, r: n.r, fill: '#22211f', stroke: 'rgba(255,255,255,.25)' }));
+      const t = el('text', { x: n.x, y: n.y + 7, 'text-anchor': 'middle' }); t.textContent = n.label; g.appendChild(t);
+    } else {
+      g.appendChild(el('circle', { cx: n.x, cy: n.y, r: n.r + 7, fill: col, opacity: 0.12 }));
+      g.appendChild(el('circle', { cx: n.x, cy: n.y, r: n.r, fill: col }));
+      const left = n.x > 430;
+      const t = el('text', { x: n.x + (left ? -(n.r + 8) : n.r + 8), y: n.y + 4, 'text-anchor': left ? 'end' : 'start' }); t.textContent = n.label; g.appendChild(t);
+    }
+    svg.appendChild(g); nodeEls[n.id] = g;
+    const on = () => light(n.id), off = () => light(null);
+    g.addEventListener('mouseenter', on); g.addEventListener('focus', on);
+    g.addEventListener('mouseleave', off); g.addEventListener('blur', off);
+    if (n.go) {
+      const go = () => document.querySelector(n.go)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      g.addEventListener('click', go);
+      g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    }
+  });
+  function light(id) {
+    if (!id) { edgeEls.forEach((l) => l.classList.remove('on', 'dimmed')); Object.values(nodeEls).forEach((g) => g.classList.remove('on', 'dimmed')); return; }
+    const near = new Set([id]);
+    edgeEls.forEach((l) => { const hit = l.dataset.a === id || l.dataset.b === id; if (hit) { near.add(l.dataset.a); near.add(l.dataset.b); } l.classList.toggle('on', hit); l.classList.toggle('dimmed', !hit); });
+    for (const k in nodeEls) { nodeEls[k].classList.toggle('on', near.has(k)); nodeEls[k].classList.toggle('dimmed', !near.has(k)); }
+  }
+})();
+
+// ---------- Live GitHub activity (public repos only; keeps the static fallback if the API fails) ----------
+(async function () {
+  try {
+    const res = await fetch('https://api.github.com/users/Emeraldd123/events/public?per_page=60');
+    if (!res.ok) throw new Error(res.status);
+    const events = await res.json();
+    const items = [];
+    for (const e of events) {
+      const repo = e.repo.name.split('/')[1];
+      if (e.type === 'PushEvent') for (const c of (e.payload.commits || []).slice(0, 2)) items.push({ when: e.created_at, msg: c.message.split('\n')[0], repo, url: `https://github.com/${e.repo.name}/commit/${c.sha}` });
+      if (e.type === 'PullRequestEvent' && e.payload.action === 'closed' && e.payload.pull_request?.merged) items.push({ when: e.created_at, msg: 'Merged: ' + e.payload.pull_request.title, repo, url: e.payload.pull_request.html_url });
+      if (items.length >= 8) break;
+    }
+    if (!items.length) return;
+    const list = document.getElementById('activity-list');
+    list.innerHTML = '';
+    const fmt = (d) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    for (const it of items.slice(0, 8)) {
+      const a = document.createElement('a');
+      a.className = 'ev'; a.href = it.url; a.target = '_blank'; a.rel = 'noopener';
+      const t = document.createElement('span'); t.className = 't'; t.textContent = fmt(it.when);
+      const m = document.createElement('span'); m.className = 'm'; m.textContent = it.msg;
+      const r = document.createElement('span'); r.className = 'r'; r.textContent = it.repo;
+      a.append(t, m, r); list.appendChild(a);
+    }
+  } catch (_) { document.getElementById('act-note').textContent = 'recent highlights'; }
+})();
+</script>
+</body>
+</html>
