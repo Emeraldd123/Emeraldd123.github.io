@@ -1,0 +1,33 @@
+<!doctype html>
+<!-- Source for assets/og-image.png (1200x630). Re-render with backend/make-og.mjs after editing. -->
+<html><head><meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; background: #161514; color: #ece9e3; font-family: Inter, sans-serif; overflow: hidden; }
+  .card { position: relative; width: 1200px; height: 630px; box-sizing: border-box; padding: 64px 72px; display: grid; grid-template-columns: 1fr 470px; gap: 48px; align-items: center;
+    background: radial-gradient(700px 420px at 85% 20%, rgba(47,200,150,.13), transparent 70%), radial-gradient(600px 400px at 0% 100%, rgba(229,138,58,.12), transparent 70%), #161514; }
+  .tag { font: 500 17px 'JetBrains Mono', monospace; color: #a8a49c; letter-spacing: .02em; display: flex; gap: 10px; align-items: center; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; background: linear-gradient(135deg, #e58a3a, #2fc896); box-shadow: 0 0 14px rgba(47,200,150,.6); }
+  h1 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 84px; line-height: .98; letter-spacing: -.01em; margin: 26px 0 26px; }
+  h1 .b { color: #e58a3a; font-style: italic; }
+  h1 em { color: #2fc896; }
+  .sub { font-size: 22px; color: #a8a49c; line-height: 1.45; margin: 0; }
+  .sub b { color: #ece9e3; font-weight: 500; }
+  .url { position: absolute; left: 72px; bottom: 44px; font: 500 18px 'JetBrains Mono', monospace; color: #2fc896; }
+  .shots { position: relative; height: 430px; }
+  .shots img { position: absolute; border-radius: 12px; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 30px 60px -20px rgba(0,0,0,.85); object-fit: cover; object-position: top left; }
+  .s1 { width: 450px; height: 280px; right: 0; top: 0; }
+  .s2 { width: 330px; height: 206px; left: -6px; bottom: 0; }
+</style></head>
+<body><div class="card">
+  <div>
+    <div class="tag"><i class="dot"></i>ben kadison · neuroscience @ pitt</div>
+    <h1>I study <span class="b">brains</span> and build software <em>to explain them.</em></h1>
+    <p class="sub">Neurotech research and AI tools: <b>MindCode</b>, <b>Ben's Notes</b>, <b>Pipit Finance</b>.</p>
+  </div>
+  <div class="shots">
+    <img class="s1" src="../assets/mindcode-demo-poster.jpg" alt="" />
+    <img class="s2" src="../assets/notes-demo-poster.jpg" alt="" />
+  </div>
+  <div class="url">emeraldd123.github.io</div>
+</div></body></html>
