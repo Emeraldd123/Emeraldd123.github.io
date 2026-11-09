@@ -242,7 +242,7 @@
       </article>
 
       <article class="feature" id="pipit">
-        <a class="shot" href="https://bensnotes.netlify.app" target="_blank" rel="noopener"><img src="assets/pipit.png" alt="Ben's Notes: a dark green notebook app with notebooks on the left and a 'A notebook you can live in' prompt" loading="lazy" /></a>
+        <a class="shot" href="https://bensnotes.netlify.app" target="_blank" rel="noopener"><video src="assets/notes-demo.mp4" poster="assets/notes-demo-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Ben's Notes demo: handwritten maths, then a graph block plotting two curves and a rotating 3D surface" style="display:block;width:100%"></video></a>
         <div>
           <div class="meta"><span class="tag">Ben's Notes</span><span>2026</span><span>TypeScript · PWA · 72 commits</span><span>Solo</span></div>
           <h3>A notebook that reviews your notes as you write them.</h3>
@@ -258,7 +258,7 @@
 
 
       <article class="feature" id="finance">
-        <div class="slides shot" data-slides><img src="assets/pipit-investments.jpg" alt="Investments page: portfolio heatmap of holdings colored by daily change (dollar totals blurred)" loading="lazy" class="on" /><img src="assets/pipit-cashflow-full.jpg" alt="Cash Flow page: monthly income vs. expense bars, trend line and a Sankey diagram (amounts blurred)" loading="lazy" /><img src="assets/pipit-insights.jpg" alt="Insights page: net worth compared with a Federal Reserve age-group distribution, and a salary comparison (figures blurred)" loading="lazy" /><div class="dots"></div></div>
+        <div class="shot"><video src="assets/finance-demo.mp4" poster="assets/finance-demo-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Pipit Finance tour on a demo account: accounts and cash forecast, transactions, year-to-date cash flow, investments heatmap, insights and goals" style="display:block;width:100%"></video></div>
         <div>
           <div class="meta"><span class="tag">Pipit Finance</span><span>2026</span><span>Next.js · Prisma · Postgres</span><span>Solo · private</span></div>
           <h3>A full personal-finance platform, connected to real bank accounts.</h3>
@@ -491,6 +491,16 @@ document.querySelectorAll('[data-slides]').forEach(function (box) {
   box.addEventListener('mouseleave', start);
   show(0); start();
 });
+</script>
+<script>
+(function () {
+  var vids = document.querySelectorAll('video[autoplay]');
+  if (!('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { var pr = e.target.play(); if (pr && pr.catch) pr.catch(function () {}); } else e.target.pause(); });
+  }, { threshold: 0.25 });
+  vids.forEach(function (v) { io.observe(v); });
+})();
 </script>
 </body>
 </html>
