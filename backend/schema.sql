@@ -41,7 +41,8 @@ revoke all on function public.portfolio_track(text, text, text, jsonb) from publ
 grant execute on function public.portfolio_track(text, text, text, jsonb) to anon;
 
 -- One row per visit, for reading in the Supabase dashboard (Table editor → schema "portfolio").
-create or replace view portfolio.visits as
+drop view if exists portfolio.visits;
+create view portfolio.visits as
 with per_visitor as (
   select visitor_id, count(distinct session_id) as visits_by_this_visitor
   from portfolio.events group by visitor_id
@@ -57,6 +58,8 @@ select
   max(e.data->>'region')   filter (where e.type = 'visit')                   as region,
   max(e.data->>'country')  filter (where e.type = 'visit')                   as country,
   max(e.data->>'referrer') filter (where e.type = 'visit')                   as referrer,
+  max(e.data->>'ref')      filter (where e.type = 'visit')                   as ref,
+  bool_or((e.data->>'ref_returning')::boolean) filter (where e.type = 'visit') as ref_returning,
   max(e.data->>'utm')      filter (where e.type = 'visit')                   as utm,
   max(e.data->>'device')   filter (where e.type = 'visit')                   as device,
   max(e.data->>'browser')  filter (where e.type = 'visit')                   as browser,
@@ -66,6 +69,9 @@ select
   max(e.data->>'role')     filter (where e.type = 'intro')                   as intro_role,
   max(e.data->>'email')    filter (where e.type = 'intro')                   as intro_email,
   max(e.data->>'note')     filter (where e.type = 'intro')                   as intro_note,
+  max(e.data->>'linkedin') filter (where e.type = 'intro')                   as intro_linkedin,
+  bool_or(e.type = 'click' and e.data->>'target' = 'resume')                 as resume_clicked,
+  (array_agg(e.data->'dwell' order by e.created_at desc) filter (where e.type in ('heartbeat', 'leave') and e.data ? 'dwell'))[1] as dwell_seconds,
   string_agg(distinct e.data->>'section', ', ') filter (where e.type = 'section') as sections_seen,
   string_agg(distinct e.data->>'target', ', ')  filter (where e.type = 'click')   as clicked,
   string_agg(distinct e.data->>'video', ', ')   filter (where e.type = 'video')   as videos_watched,
@@ -73,6 +79,7 @@ select
   -- Rough "is this a recruiter?" signal: they reached contact/experience or clicked contact links.
   (bool_or(e.type = 'intro')
      or bool_or(e.type = 'click' and e.data->>'target' in ('email', 'linkedin', 'resume'))
+     or bool_or(e.type = 'visit' and coalesce(e.data->>'ref', '') <> '')
      or bool_or(e.type = 'section' and e.data->>'section' in ('experience', 'contact'))) as warm_lead
 from portfolio.events e
 group by e.session_id

@@ -19,6 +19,18 @@
   var visitor = get('localStorage', 'pf_vid') || rid(); set('localStorage', 'pf_vid', visitor);
   var session = get('sessionStorage', 'pf_sid') || rid(); set('sessionStorage', 'pf_sid', session);
 
+  // Personal tracking links: ?ref=<tag> (made with backend/link.cjs). The tag is remembered on this
+  // device (first link wins) so later direct visits still attribute to it, and it is removed from
+  // the address bar so a forwarded link doesn't get credited to the wrong person.
+  var refNow = (qs.get('ref') || '').replace(/[^\w.-]/g, '').slice(0, 80);
+  var refFirst = get('localStorage', 'pf_ref') || refNow;
+  if (refNow && !get('localStorage', 'pf_ref')) set('localStorage', 'pf_ref', refNow);
+  if (refNow && history.replaceState) {
+    qs.delete('ref');
+    var rest = qs.toString();
+    history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+  }
+
   var place = { city: '', region: '', country: '', org: '' };
   var ready = !!SUPABASE_ANON_KEY;
 
@@ -45,6 +57,7 @@
     return h > 0 ? Math.min(100, Math.round((scrollY / h) * 100)) : 100;
   }
   var maxScroll = 0;
+  var dwell = {};
   addEventListener('scroll', function () { maxScroll = Math.max(maxScroll, scrollPct()); }, { passive: true });
 
   function lookupPlace() {
@@ -59,10 +72,10 @@
   }
 
   function startAnalytics() {
-    var utm = ['utm_source', 'utm_medium', 'utm_campaign'].map(function (k) { return qs.get(k) ? k.slice(4) + '=' + qs.get(k) : ''; }).filter(Boolean).join('&');
+    var utm = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].map(function (k) { return qs.get(k) ? k.slice(4) + '=' + qs.get(k) : ''; }).filter(Boolean).join('&');
     track('visit', {
       referrer: document.referrer ? document.referrer.slice(0, 300) : '',
-      utm: utm, path: location.pathname + location.hash,
+      ref: refNow || refFirst, ref_first: refFirst, ref_returning: !refNow && !!refFirst, utm: utm, path: location.pathname + location.hash,
       org: place.org, city: place.city, region: place.region, country: place.country,
       tz: (Intl.DateTimeFormat().resolvedOptions().timeZone || ''), lang: navigator.language || '',
       device: matchMedia('(pointer:coarse)').matches ? 'mobile/tablet' : 'desktop',
@@ -71,7 +84,20 @@
 
     // Sections and projects seen (once each, after 1.5 s in view)
     var seen = {};
-    var ids = ['work', 'mindcode', 'pipit', 'finance', 'bentimes', 'nfl', 'board', 'research', 'experience', 'about', 'contact'];
+    var ids = ['work', 'mindcode', 'pipit', 'finance', 'bentimes', 'nfl', 'board', 'research', 'fog', 'emg', 'babson', 'experience', 'about', 'contact'];
+
+    // Dwell time: seconds each section/project spends at least 35% on screen while the tab is visible.
+    var visible = {};
+    if ('IntersectionObserver' in window) {
+      var dio = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { visible[e.target.id] = e.isIntersecting; });
+      }, { threshold: 0.35 });
+      ids.forEach(function (id) { var el = document.getElementById(id); el && dio.observe(el); });
+      setInterval(function () {
+        if (document.visibilityState !== 'visible') return;
+        Object.keys(visible).forEach(function (id) { if (visible[id]) dwell[id] = (dwell[id] || 0) + 1; });
+      }, 1000);
+    }
     if ('IntersectionObserver' in window) {
       var timers = {};
       var io = new IntersectionObserver(function (es) {
@@ -91,7 +117,7 @@
       if (!a) return;
       var h = a.getAttribute('href');
       if (h.charAt(0) === '#') return;
-      var target = /^mailto:/.test(h) ? 'email' : /linkedin\.com/.test(h) ? 'linkedin' : /\.pdf($|\?)/.test(h) ? 'resume'
+      var target = /^mailto:/.test(h) ? 'email' : /linkedin\.com/.test(h) ? 'linkedin' : (/\.pdf($|\?)/.test(h) || a.dataset.track === 'resume') ? 'resume'
         : /github\.com\/Emeraldd123\/?$/.test(h) ? 'github-profile' : /github\.com/.test(h) ? 'github-repo'
         : /mindcode1\.netlify\.app\/api/.test(h) ? 'mindcode-built-app' : /mindcode1\.netlify\.app/.test(h) ? 'mindcode-demo'
         : /bensnotes/.test(h) ? 'bens-notes-app' : 'other';
@@ -118,10 +144,10 @@
     var hb = setInterval(function () {
       if (document.visibilityState !== 'visible') return;
       if (++beats > 30) return clearInterval(hb);
-      track('heartbeat', { scroll: maxScroll });
+      track('heartbeat', { scroll: maxScroll, dwell: dwell });
     }, 20000);
     var left = false;
-    addEventListener('pagehide', function () { if (!left) { left = true; track('leave', { scroll: maxScroll }, true); } });
+    addEventListener('pagehide', function () { if (!left) { left = true; track('leave', { scroll: maxScroll, dwell: dwell }, true); } });
   }
 
   // ---------- live presence + cursors ----------
@@ -191,6 +217,7 @@
     });
   }
 
+  if (ready) window.__pfTrack = track; // track() itself skips Ben's own browser
   if (!ready) return;
   lookupPlace().then(function () {
     startAnalytics();
@@ -213,4 +240,21 @@
       f.querySelector('[data-close]').addEventListener('click', function () { dlg.close(); });
     });
   }
+})();
+
+// ---------- one-field "drop your LinkedIn" box ----------
+(function () {
+  var f = document.getElementById('li-box');
+  if (!f || !window.__pfTrack) return;
+  f.hidden = false;
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var msg = f.querySelector('.li-msg');
+    var v = (f.elements.linkedin.value || '').trim();
+    if (!/linkedin\.com\/(in|company)\/[^\s/]+/i.test(v)) { msg.textContent = 'Paste a LinkedIn profile link, like linkedin.com/in/your-name.'; return; }
+    if (!/^https?:\/\//i.test(v)) v = 'https://' + v.replace(/^\/+/, '');
+    window.__pfTrack('intro', { linkedin: v.slice(0, 200), source: 'linkedin-box' });
+    f.querySelector('.li-row').remove();
+    msg.textContent = "Got it, thanks. I'll reach out on LinkedIn.";
+  });
 })();

@@ -30,6 +30,11 @@ const csv = process.argv.includes('--csv');
   const visitors = new Set(rows.map((r) => r.visitor_id));
   const warm = rows.filter((r) => r.warm_lead);
   const intros = rows.filter((r) => r.intro_name || r.intro_company);
+  const linkedins = rows.filter((r) => r.intro_linkedin);
+  const resumes = rows.filter((r) => r.resume_clicked);
+  const tagged = rows.filter((r) => r.ref);
+  const topDwell = (r, n = 3) => Object.entries(r.dwell_seconds || {}).sort((a, b) => b[1] - a[1]).slice(0, n)
+    .map(([k, v]) => `${k} ${v >= 60 ? Math.round(v / 6) / 10 + 'm' : v + 's'}`).join(', ') || '-';
   const count = (key) => {
     const m = {};
     for (const r of rows) for (const v of String(r[key] || '').split(', ').filter(Boolean)) m[v] = (m[v] || 0) + 1;
@@ -40,7 +45,19 @@ const csv = process.argv.includes('--csv');
   const mins = (s) => (s >= 60 ? Math.round(s / 60) + ' min' : s + ' s');
 
   line(`\nPortfolio visitors, last ${days} days`);
-  line(`  ${rows.length} visits from ${visitors.size} people · ${warm.length} warm leads · ${intros.length} said hi\n`);
+  line(`  ${rows.length} visits from ${visitors.size} people · ${warm.length} warm leads · ${intros.length} said hi`);
+  line(`  RESUMES DOWNLOADED: ${resumes.length} · LINKEDINS DROPPED: ${linkedins.length} · TRACKED-LINK VISITS: ${tagged.length}\n`);
+
+  if (linkedins.length) {
+    line('LINKEDIN DROPS');
+    for (const r of linkedins) line(`  ${when(r.started_at)}  ${r.intro_linkedin}  (${r.network_org || '?'}, ${r.city || '?'}${r.ref ? ', ref ' + r.ref : ''})`);
+    line('');
+  }
+  if (tagged.length) {
+    line('TRACKED LINKS (people you sent a ?ref= link to)');
+    for (const r of tagged) line(`  ${when(r.started_at)}  ${r.ref}${r.ref_returning ? ' (came back later)' : ''} · ${mins(r.seconds_on_site)} · read most: ${topDwell(r)} · clicked: ${r.clicked || '-'}${r.resume_clicked ? ' · RESUME' : ''}`);
+    line('');
+  }
 
   if (intros.length) {
     line('SAID HI');
@@ -52,6 +69,10 @@ const csv = process.argv.includes('--csv');
   for (const [k, n] of count('network_org').slice(0, 15)) line(`  ${String(n).padStart(3)}  ${k}`);
   line('\nWHERE FROM');
   for (const [k, n] of count('referrer').slice(0, 10)) line(`  ${String(n).padStart(3)}  ${k}`);
+  line('\nATTENTION (total seconds on screen, all visits)');
+  const att = {};
+  for (const r of rows) for (const [k, v] of Object.entries(r.dwell_seconds || {})) att[k] = (att[k] || 0) + v;
+  for (const [k, v] of Object.entries(att).sort((a, b) => b[1] - a[1])) line(`  ${String(v).padStart(5)}s  ${k}`);
   line('\nPROJECTS SEEN');
   for (const [k, n] of count('sections_seen')) line(`  ${String(n).padStart(3)}  ${k}`);
   line('\nDEMO VIDEOS WATCHED');
@@ -59,11 +80,11 @@ const csv = process.argv.includes('--csv');
   line('\nLINKS CLICKED');
   for (const [k, n] of count('clicked')) line(`  ${String(n).padStart(3)}  ${k}`);
 
-  line('\nWARM LEADS (reached experience/contact, clicked email/LinkedIn/resume, or said hi)');
+  line('\nWARM LEADS (came from a ref link, reached experience/contact, clicked email/LinkedIn/resume, or said hi)');
   for (const r of warm.slice(0, 40)) {
     const where = [r.city, r.region, r.country].filter(Boolean).join(', ');
     line(`  ${when(r.started_at)}  ${r.network_org || 'unknown network'} · ${where || '?'} · ${mins(r.seconds_on_site)} · ${r.visits_by_this_visitor} visit(s)`);
-    line(`      saw: ${r.sections_seen || '-'} | clicked: ${r.clicked || '-'} | from: ${r.referrer || 'direct'}`);
+    line(`      read most: ${topDwell(r)} | clicked: ${r.clicked || '-'}${r.resume_clicked ? ' | RESUME' : ''} | from: ${r.ref ? 'ref ' + r.ref : r.referrer || 'direct'}`);
   }
   line('');
 })().catch((e) => { console.error('Report failed:', e.message); process.exit(1); });
