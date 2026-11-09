@@ -13,6 +13,10 @@ create table if not exists portfolio.events (
   type        text not null check (type in ('visit', 'section', 'click', 'video', 'heartbeat', 'leave', 'intro')),
   data        jsonb not null default '{}'::jsonb check (pg_column_size(data) < 4000)
 );
+-- 'owner' marks a browser as Ben's own (sent once from ?me=1); his visits are kept but flagged.
+alter table portfolio.events drop constraint if exists events_type_check;
+alter table portfolio.events add constraint events_type_check
+  check (type in ('visit', 'section', 'click', 'video', 'heartbeat', 'leave', 'intro', 'owner'));
 create index if not exists events_session_idx on portfolio.events (session_id, created_at);
 create index if not exists events_created_idx on portfolio.events (created_at desc);
 
@@ -43,7 +47,9 @@ grant execute on function public.portfolio_track(text, text, text, jsonb) to ano
 -- One row per visit, for reading in the Supabase dashboard (Table editor → schema "portfolio").
 drop view if exists portfolio.visits;
 create view portfolio.visits as
-with per_visitor as (
+with owners as (
+  select distinct visitor_id from portfolio.events where type = 'owner'
+), per_visitor as (
   select visitor_id, count(distinct session_id) as visits_by_this_visitor
   from portfolio.events group by visitor_id
 ), s as (
@@ -84,7 +90,8 @@ select
 from portfolio.events e
 group by e.session_id
 )
-select s.*, v.visits_by_this_visitor
+select s.*, v.visits_by_this_visitor, (s.visitor_id in (select visitor_id from owners)) as is_owner
 from s join per_visitor v using (visitor_id)
+where exists (select 1 from portfolio.events x where x.session_id = s.session_id and x.type <> 'owner')
 order by s.started_at desc;
 revoke all on portfolio.visits from anon, authenticated;

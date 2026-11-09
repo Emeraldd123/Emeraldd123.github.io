@@ -13,10 +13,13 @@
   function rid() { return (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2) + Date.now().toString(36)).replace(/-/g, '').slice(0, 24); }
 
   var qs = new URLSearchParams(location.search);
-  if (qs.get('me') === '1') set('localStorage', 'pf_me', '1');      // visit once with ?me=1 so Ben's own views aren't counted
-  if (qs.get('me') === '0') set('localStorage', 'pf_me', '');
-  var isMe = get('localStorage', 'pf_me') === '1';
+  // Ben's own browsers: open the site once with ?me=1. This browser's visits (past and future) are then
+  // flagged as his in the database and left out of reports, and it stops sending new events. ?me=0 undoes it.
   var visitor = get('localStorage', 'pf_vid') || rid(); set('localStorage', 'pf_vid', visitor);
+  var meParam = qs.get('me');
+  if (meParam === '1') set('localStorage', 'pf_me', '1');
+  if (meParam === '0') set('localStorage', 'pf_me', '');
+  var isMe = get('localStorage', 'pf_me') === '1';
   var session = get('sessionStorage', 'pf_sid') || rid(); set('sessionStorage', 'pf_sid', session);
 
   // Personal tracking links: ?ref=<tag> (made with backend/link.cjs). The tag is remembered on this
@@ -218,6 +221,22 @@
   }
 
   if (ready) window.__pfTrack = track; // track() itself skips Ben's own browser
+  if (ready && meParam === '1') {
+    // Tell the database this visitor id is Ben (sent even though tracking is now off), then tidy the URL.
+    try {
+      fetch(SUPABASE_URL + '/rest/v1/rpc/portfolio_track', {
+        method: 'POST', keepalive: true,
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY },
+        body: JSON.stringify({ p_session: 'owner-' + visitor.slice(0, 20), p_visitor: visitor, p_type: 'owner', p_data: { device: navigator.userAgent.slice(0, 160) } }),
+      }).catch(function () {});
+    } catch (e) {}
+    if (history.replaceState) { qs.delete('me'); var r2 = qs.toString(); history.replaceState(null, '', location.pathname + (r2 ? '?' + r2 : '') + location.hash); }
+    var note = document.createElement('div');
+    note.className = 'me-note';
+    note.textContent = "Got it: this browser is yours and won't be counted in your visitor stats.";
+    document.body.appendChild(note);
+    setTimeout(function () { note.remove(); }, 6000);
+  }
   if (!ready) return;
   lookupPlace().then(function () {
     startAnalytics();

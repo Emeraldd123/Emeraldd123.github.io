@@ -20,6 +20,8 @@ declare
   body    text;
 begin
   if new.type <> 'intro' then return new; end if;
+  -- No alerts for Ben's own browsers (marked with ?me=1)
+  if exists (select 1 from portfolio.events where visitor_id = new.visitor_id and type = 'owner') then return new; end if;
 
   select decrypted_secret into k      from vault.decrypted_secrets where name = 'portfolio_resend_key';
   select decrypted_secret into sender from vault.decrypted_secrets where name = 'portfolio_email_from';

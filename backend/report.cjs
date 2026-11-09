@@ -11,12 +11,13 @@ const { Client } = require(path.join(PIPIT, 'node_modules/pg'));
 
 const days = Number(process.argv[2]) || 14;
 const csv = process.argv.includes('--csv');
+const meOnly = process.argv.includes('--me'); // show only Ben's own visits instead of excluding them
 
 (async () => {
   const c = new Client({ connectionString: process.env.DIRECT_URL || process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
   await c.connect();
   const { rows } = await c.query(
-    `select * from portfolio.visits where started_at > now() - make_interval(days => $1) order by started_at desc`, [days]);
+    `select * from portfolio.visits where started_at > now() - make_interval(days => $1) and is_owner = $2 order by started_at desc`, [days, meOnly]);
   await c.end();
 
   if (csv) {
@@ -44,7 +45,7 @@ const csv = process.argv.includes('--csv');
   const when = (d) => new Date(d).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
   const mins = (s) => (s >= 60 ? Math.round(s / 60) + ' min' : s + ' s');
 
-  line(`\nPortfolio visitors, last ${days} days`);
+  line(meOnly ? `\nYOUR OWN visits (marked with ?me=1), last ${days} days` : `\nPortfolio visitors, last ${days} days (your own browsers excluded)`);
   line(`  ${rows.length} visits from ${visitors.size} people · ${warm.length} warm leads · ${intros.length} said hi`);
   line(`  RESUMES DOWNLOADED: ${resumes.length} · LINKEDINS DROPPED: ${linkedins.length} · TRACKED-LINK VISITS: ${tagged.length}\n`);
 
