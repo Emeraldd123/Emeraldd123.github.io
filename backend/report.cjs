@@ -12,7 +12,7 @@ const { Client } = require(path.join(PIPIT, 'node_modules/pg'));
 const today = process.argv.includes('today') || process.argv.includes('--today'); // since midnight Eastern
 const showAll = process.argv.includes('--all');                                      // list every visit, not just warm leads
 const days = Number(process.argv.find((a) => /^\d+$/.test(a))) || 14;
-const label = today ? 'today' : `${label}`;
+const label = today ? "today" : `last ${days} days`;
 const cutoff = today
   ? "date_trunc('day', now() at time zone 'America/New_York') at time zone 'America/New_York'"
   : `now() - interval '${days} days'`;
