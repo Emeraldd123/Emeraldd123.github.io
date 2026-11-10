@@ -36,9 +36,9 @@ const meOnly = process.argv.includes('--me'); // show only Ben's own visits inst
   const tagged = rows.filter((r) => r.ref);
   const topDwell = (r, n = 3) => Object.entries(r.dwell_seconds || {}).sort((a, b) => b[1] - a[1]).slice(0, n)
     .map(([k, v]) => `${k} ${v >= 60 ? Math.round(v / 6) / 10 + 'm' : v + 's'}`).join(', ') || '-';
-  const count = (key) => {
+  const count = (key, split = true) => {
     const m = {};
-    for (const r of rows) for (const v of String(r[key] || '').split(', ').filter(Boolean)) m[v] = (m[v] || 0) + 1;
+    for (const r of rows) for (const v of (split ? String(r[key] || '').split(', ') : [String(r[key] || '')]).filter(Boolean)) m[v] = (m[v] || 0) + 1;
     return Object.entries(m).sort((a, b) => b[1] - a[1]);
   };
   const line = (s) => console.log(s);
@@ -67,9 +67,9 @@ const meOnly = process.argv.includes('--me'); // show only Ben's own visits inst
   }
 
   line('NETWORKS (company / university / ISP from IP)');
-  for (const [k, n] of count('network_org').slice(0, 15)) line(`  ${String(n).padStart(3)}  ${k}`);
+  for (const [k, n] of count('network_org', false).slice(0, 15)) line(`  ${String(n).padStart(3)}  ${k}`);
   line('\nWHERE FROM');
-  for (const [k, n] of count('referrer').slice(0, 10)) line(`  ${String(n).padStart(3)}  ${k}`);
+  for (const [k, n] of count('referrer', false).slice(0, 10)) line(`  ${String(n).padStart(3)}  ${k}`);
   line('\nATTENTION (total seconds on screen, all visits)');
   const att = {};
   for (const r of rows) for (const [k, v] of Object.entries(r.dwell_seconds || {})) att[k] = (att[k] || 0) + v;
