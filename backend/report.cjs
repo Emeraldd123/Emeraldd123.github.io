@@ -9,7 +9,13 @@ const PIPIT = process.env.PIPIT_DIR || path.resolve(__dirname, '../../Pipit');
 require(path.join(PIPIT, 'node_modules/dotenv')).config({ path: path.join(PIPIT, '.env'), quiet: true });
 const { Client } = require(path.join(PIPIT, 'node_modules/pg'));
 
-const days = Number(process.argv[2]) || 14;
+const today = process.argv.includes('today') || process.argv.includes('--today'); // since midnight Eastern
+const showAll = process.argv.includes('--all');                                      // list every visit, not just warm leads
+const days = Number(process.argv.find((a) => /^\d+$/.test(a))) || 14;
+const label = today ? 'today' : `${label}`;
+const cutoff = today
+  ? "date_trunc('day', now() at time zone 'America/New_York') at time zone 'America/New_York'"
+  : `now() - interval '${days} days'`;
 const csv = process.argv.includes('--csv');
 const meOnly = process.argv.includes('--me'); // show only Ben's own visits instead of excluding them
 
@@ -17,7 +23,7 @@ const meOnly = process.argv.includes('--me'); // show only Ben's own visits inst
   const c = new Client({ connectionString: process.env.DIRECT_URL || process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
   await c.connect();
   const { rows } = await c.query(
-    `select * from portfolio.visits where started_at > now() - make_interval(days => $1) and is_owner = $2 order by started_at desc`, [days, meOnly]);
+    `select * from portfolio.visits where started_at > ${cutoff} and is_owner = $1 order by started_at desc`, [meOnly]);
   await c.end();
 
   if (csv) {
@@ -45,7 +51,7 @@ const meOnly = process.argv.includes('--me'); // show only Ben's own visits inst
   const when = (d) => new Date(d).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
   const mins = (s) => (s >= 60 ? Math.round(s / 60) + ' min' : s + ' s');
 
-  line(meOnly ? `\nYOUR OWN visits (marked with ?me=1), last ${days} days` : `\nPortfolio visitors, last ${days} days (your own browsers excluded)`);
+  line(meOnly ? `\nYOUR OWN visits (marked with ?me=1), ${label}` : `\nPortfolio visitors, ${label} (your own browsers excluded)`);
   line(`  ${rows.length} visits from ${visitors.size} people · ${warm.length} warm leads · ${intros.length} said hi`);
   line(`  RESUMES DOWNLOADED: ${resumes.length} · LINKEDINS DROPPED: ${linkedins.length} · TRACKED-LINK VISITS: ${tagged.length}\n`);
 
@@ -86,6 +92,26 @@ const meOnly = process.argv.includes('--me'); // show only Ben's own visits inst
     const where = [r.city, r.region, r.country].filter(Boolean).join(', ');
     line(`  ${when(r.started_at)}  ${r.network_org || 'unknown network'} · ${where || '?'} · ${mins(r.seconds_on_site)} · ${r.visits_by_this_visitor} visit(s)`);
     line(`      read most: ${topDwell(r)} | clicked: ${r.clicked || '-'}${r.resume_clicked ? ' | RESUME' : ''} | from: ${r.ref ? 'ref ' + r.ref : r.referrer || 'direct'}`);
+  }
+  if (!today) {
+    const byDay = {};
+    for (const r of rows) {
+      const d = new Date(r.started_at).toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+      (byDay[d] = byDay[d] || { visits: 0, people: new Set() }).visits++;
+      byDay[d].people.add(r.visitor_id);
+    }
+    line('\nBY DAY (Eastern)');
+    for (const d of Object.keys(byDay).sort().reverse()) line(`  ${d}  ${String(byDay[d].visits).padStart(3)} visits  ${String(byDay[d].people.size).padStart(3)} people`);
+  }
+
+  if (showAll) {
+    line(`\nALL VISITS (${label}, newest first)`);
+    for (const r of rows) {
+      const where = [r.city, r.region, r.country].filter(Boolean).join(', ');
+      const src = r.ref ? 'ref ' + r.ref : r.referrer ? r.referrer.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') : 'direct';
+      line(`  ${when(r.started_at)}  ${(r.network_org || 'unknown').slice(0, 34).padEnd(34)} ${(where || '?').slice(0, 38).padEnd(38)} ${r.device || '?'} ${r.browser || ''}`);
+      line(`      ${mins(r.seconds_on_site)} on site | from ${src} | saw: ${r.sections_seen || '-'}${r.clicked ? ' | clicked: ' + r.clicked : ''}${r.warm_lead ? ' | WARM' : ''}`);
+    }
   }
   line('');
 })().catch((e) => { console.error('Report failed:', e.message); process.exit(1); });
