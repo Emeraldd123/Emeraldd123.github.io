@@ -22,9 +22,14 @@ const meOnly = process.argv.includes('--me'); // show only Ben's own visits inst
 (async () => {
   const c = new Client({ connectionString: process.env.DIRECT_URL || process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
   await c.connect();
-  const { rows } = await c.query(
+  const { rows: allRows } = await c.query(
     `select * from portfolio.visits where started_at > ${cutoff} and is_owner = $1 order by started_at desc`, [meOnly]);
   await c.end();
+
+  // Crawlers and link-preview fetchers: gone in under 5 s, saw nothing, clicked nothing. Hidden unless --with-bots.
+  const isBot = (x) => (x.seconds_on_site || 0) < 5 && !x.sections_seen && !x.clicked && !x.intro_linkedin && !x.intro_name;
+  const bots = allRows.filter(isBot);
+  const rows = process.argv.includes('--with-bots') ? allRows : allRows.filter((x) => !isBot(x));
 
   if (csv) {
     const cols = Object.keys(rows[0] || { session_id: 1 });
@@ -55,6 +60,7 @@ const meOnly = process.argv.includes('--me'); // show only Ben's own visits inst
   line(`  ${rows.length} visits from ${visitors.size} people · ${warm.length} warm leads · ${intros.length} said hi`);
   line(`  RESUMES DOWNLOADED: ${resumes.length} · LINKEDINS DROPPED: ${linkedins.length} · TRACKED-LINK VISITS: ${tagged.length}\n`);
 
+  if (bots.length && !process.argv.includes('--with-bots')) line(`  (${bots.length} likely bots or instant bounces hidden; add --with-bots to include them)\n`);
   if (linkedins.length) {
     line('LINKEDIN DROPS');
     for (const r of linkedins) line(`  ${when(r.started_at)}  ${r.intro_linkedin}  (${r.network_org || '?'}, ${r.city || '?'}${r.ref ? ', ref ' + r.ref : ''})`);

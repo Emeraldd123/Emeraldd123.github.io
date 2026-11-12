@@ -4,14 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Ben Kadison: neuroscience × software</title>
-<meta name="description" content="Ben Kadison: neuroscience student at the University of Pittsburgh, neurotechnology researcher, and builder of AI tools like MindCode, Ben's Notes and Pipit Finance." />
+<meta name="description" content="Ben Kadison is a neuroscience student at Pitt who works on motor-neuron signals in a CMU lab and builds software projects, including MindCode, Ben's Notes and Pipit Finance. Looking for a Summer 2027 internship." />
 <link rel="canonical" href="https://emeraldd123.github.io/" />
 <!-- Social preview (LinkedIn, Reddit, Slack, iMessage, X). Image URLs must be absolute. -->
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Ben Kadison" />
 <meta property="og:url" content="https://emeraldd123.github.io/" />
 <meta property="og:title" content="Ben Kadison: neuroscience × software" />
-<meta property="og:description" content="Neuroscience student at Pitt and neurotech researcher. I build AI tools that show their thinking: MindCode, Ben's Notes and Pipit Finance." />
+<meta property="og:description" content="Neuroscience student at Pitt, working on motor-neuron signals at CMU. Also builds software: MindCode, Ben's Notes and Pipit Finance." />
 <meta property="og:image" content="https://emeraldd123.github.io/assets/og-image.png" />
 <meta property="og:image:secure_url" content="https://emeraldd123.github.io/assets/og-image.png" />
 <meta property="og:image:type" content="image/png" />
@@ -22,7 +22,7 @@
 <meta name="author" content="Ben Kadison" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Ben Kadison: neuroscience × software" />
-<meta name="twitter:description" content="Neuroscience student at Pitt and neurotech researcher. I build AI tools that show their thinking: MindCode, Ben's Notes and Pipit Finance." />
+<meta name="twitter:description" content="Neuroscience student at Pitt, working on motor-neuron signals at CMU. Also builds software: MindCode, Ben's Notes and Pipit Finance." />
 <meta name="twitter:image" content="https://emeraldd123.github.io/assets/og-image.png" />
 <meta name="twitter:image:alt" content="Ben Kadison: I study brains and build software to explain them." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -172,6 +172,16 @@
   .li-msg:empty { display: none; }
   @media (max-width: 760px) { .li-box { grid-template-columns: 1fr; } .li-row input { flex: 1; width: auto; min-width: 0; } }
   .me-note { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 80; padding: 10px 16px; border-radius: 999px; background: var(--text); color: #141312; font: 500 14px var(--sans); box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+  .mobile-bar { display: none; }
+  @media (max-width: 640px) {
+    .cta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .cta .btn { justify-content: center; }
+    body { padding-bottom: 76px; }
+    .mobile-bar { display: flex; position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 70; gap: 6px; padding: 6px; border: 1px solid var(--line-2); border-radius: 999px; background: rgba(29,28,26,.94); backdrop-filter: blur(8px); transform: translateY(150%); transition: transform .25s ease; }
+    .mobile-bar.show { transform: none; }
+    .mobile-bar a { flex: 1; text-align: center; padding: 10px 6px; border-radius: 999px; font: 500 14px var(--sans); color: var(--text); text-decoration: none; }
+    .mobile-bar a:first-child { background: var(--text); color: #141312; }
+  }
   .cover { height: 132px; border-radius: 10px; margin-bottom: 16px; position: relative; overflow: hidden; border: 1px solid var(--line); }
   .cover.times { background: #efe9dc; color: #1b1a17; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Instrument Serif', serif; }
   .cover.times b { font-size: 30px; font-weight: 400; border-top: 2px solid #1b1a17; border-bottom: 2px solid #1b1a17; padding: 2px 14px; }
@@ -246,7 +256,7 @@
     <a class="brand" href="#top"><i class="dot"></i>ben kadison <span>/ neuro × software</span></a>
     <div id="live-pill" class="live-pill" hidden role="status"><i></i><b>1</b> <span>here now</span></div>
     <nav aria-label="Sections">
-      <a href="#work">work</a><a href="#research">research</a><a href="#experience">experience</a><a href="#about">about</a><a href="#contact">contact</a>
+      <a href="#research">research</a><a href="#work">work</a><a href="#experience">experience</a><a href="#about">about</a><a href="#contact">contact</a>
     </nav>
   </div>
 </header>
@@ -259,9 +269,9 @@
         <span class="pill"><i style="background:var(--build)"></i>Neurotech research @ CMU</span>
       </div>
       <h1>I study <span class="b">brains</span> and build software <em>to explain them.</em></h1>
-      <p class="lede">I'm Ben, a neuroscience student who builds AI tools. My research models movement and the nervous system; my side projects make AI more transparent, from mapping every assumption a coding model makes to a notebook that checks your math step by step.</p>
+      <p class="lede">I'm Ben, a neuroscience student at Pitt. In Dr. Beauchamp's lab at CMU I work on how motor neurons fire. On the side I build software: a notes app for studying, a budgeting app, a morning newspaper for my iPad, and a hackathon project about what AI assumes when it builds something. <b>I'm looking for a Summer 2027 internship in neurotech, ML or software.</b></p>
       <div class="cta">
-        <a class="btn primary" href="#work">See the work ↓</a>
+        <a class="btn primary" href="#research">See my work ↓</a>
         <a class="btn" href="https://github.com/Emeraldd123" target="_blank" rel="noopener">GitHub ↗</a>
         <a class="btn" href="https://www.linkedin.com/in/benkadison/" target="_blank" rel="noopener">LinkedIn ↗</a>
         <a class="btn" href="assets/Ben-Kadison-Resume.pdf" data-track="resume" target="_blank" rel="noopener">Resume ↓</a>
@@ -274,83 +284,6 @@
     </div>
   </div>
 
-  <!-- WORK -->
-  <section id="work">
-    <div class="wrap">
-      <div class="sec-head"><h2>Selected work</h2><p>software · AI · tools I use daily</p></div>
-
-      <article class="feature" id="mindcode">
-        <a class="shot" href="https://mindcode1.netlify.app/api/sessions/458a2ac2-eb7/builds/b1/app" target="_blank" rel="noopener"><video src="assets/mindcode-demo.mp4" poster="assets/mindcode-demo-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="MindCode demo: a prompt becomes a map of 34 bubbles, one is approved, the app is built, and hovering its parts lights up the bubbles that caused them" style="display:block;width:100%"></video></a>
-        <div>
-          <div class="meta"><span class="tag">MindCode</span><span>Nov 2026</span><span>NOVA hackathon · ScottyLabs, CMU</span><span>Team lead</span></div>
-          <h3>Every assumption an AI makes, as a map you can edit before it builds.</h3>
-          <p>When AI builds an app, it silently decides dozens of things you never asked for. MindCode turns your idea into a full plan: pages, features, APIs, design, audience and cost, colored by what <i>you</i> said vs. what Claude <i>assumed</i> vs. what's still open. Then it builds the app and traces every element back to the bubble that caused it.</p>
-          <ul class="points">
-            <li>Designed the <b>prompt-engineering framework</b> (Design / Audience / Functionality / Cost) that structures every plan.</li>
-            <li>Led <b>4 people and a team of AI coding agents</b> (Claude Code, Google Antigravity, Jules) through a shared task board, cross-review and a 15-deploy budget.</li>
-            <li>Right-click any part of the generated site to change it (<b>~7 s</b>, via patch edits); small plan changes rebuild in <b>~20 s</b>.</li>
-          </ul>
-          <div class="links"><a href="https://mindcode1.netlify.app/api/sessions/458a2ac2-eb7/builds/b1/app" target="_blank" rel="noopener">See the app it built ↗</a><a href="https://mindcode1.netlify.app/?demo=1" target="_blank" rel="noopener">Try MindCode ↗</a><a href="https://github.com/Emeraldd123/MindCode" target="_blank" rel="noopener">Code ↗</a></div>
-        </div>
-      </article>
-
-      <article class="feature" id="pipit">
-        <a class="shot" href="https://bensnotes.netlify.app" target="_blank" rel="noopener"><video src="assets/notes-demo.mp4" poster="assets/notes-demo-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Ben's Notes demo: handwritten maths, then a graph block plotting two curves and a rotating 3D surface" style="display:block;width:100%"></video></a>
-        <div>
-          <div class="meta"><span class="tag">Ben's Notes</span><span>2026</span><span>TypeScript · PWA · 72 commits</span><span>Solo</span></div>
-          <h3>A notebook that reviews your notes as you write them.</h3>
-          <p>Ben's Notes (also called Pipit Notes) is an iPad notebook wired to machine-learning models. While you write with Apple Pencil, it reads your handwriting, checks it, and turns it into study material built on learning-science methods that have been tested in research. Notes stay on your device in IndexedDB, with no account and no server.</p>
-          <ul class="points">
-            <li><b>Live review as you write:</b> handwriting is recognized into math and text, each line of working is checked (SymPy running in the browser through Pyodide verifies the algebra), and mistakes are highlighted on the page with why they're wrong and the fix.</li>
-            <li><b>Exams that look like your real ones:</b> timed practice papers generated from your notes and course PDFs, with structured multi-part questions, graphs, tables and diagrams cut from your own materials, marked against a marking scheme.</li>
-            <li><b>Proven study methods:</b> <b>FSRS-5</b> spaced repetition (the scheduler Anki uses), retrieval practice, interleaved short lessons, and concept maps you recall from memory and that are colored by how well you know each idea.</li>
-          </ul>
-          <div class="links"><a href="https://bensnotes.netlify.app" target="_blank" rel="noopener">Open the app ↗</a><a href="https://github.com/Emeraldd123/pipit-notes" target="_blank" rel="noopener">Code ↗</a></div>
-        </div>
-      </article>
-
-
-      <article class="feature" id="finance">
-        <div class="shot"><video src="assets/finance-demo.mp4" poster="assets/finance-demo-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Pipit Finance tour on a demo account: accounts and cash forecast, transactions, year-to-date cash flow, investments heatmap, insights and goals" style="display:block;width:100%"></video></div>
-        <div>
-          <div class="meta"><span class="tag">Pipit Finance</span><span>2026</span><span>Next.js · Prisma · Postgres</span><span>Solo · private</span></div>
-          <h3>A full personal-finance platform, connected to real bank accounts.</h3>
-          <p>A budgeting and net-worth app in the spirit of Monarch or Copilot, built end to end: about 440 files, 38 database models and 88 commits. Bank accounts sync through <b>Plaid</b> and subscriptions bill through <b>Stripe</b>.</p>
-          <ul class="points">
-            <li><b>Bank sync:</b> Plaid Link and incremental transaction sync, with <b>signature-verified webhooks</b> (JWT). Access tokens are encrypted at rest with <b>AES-256-GCM</b>.</li>
-            <li><b>Security:</b> NextAuth sessions, <b>TOTP two-factor auth</b> with QR enrolment, rate limiting, and Zod validation on server input.</li>
-            <li><b>Money logic:</b> a rules engine and auto-categorizer, recurring-charge detection, budgets, shared household goals, investment history, cash-balance forecasts and net-worth projections.</li>
-            <li><b>Reports:</b> Sankey cash-flow diagrams (d3-sankey), spending reports, salary benchmarks, CSV import and export, and scheduled snapshot and alert jobs with email through Resend.</li>
-          </ul>
-          <div class="links"><span class="private-note">Private repo: code walkthrough on request</span></div>
-        </div>
-      </article>
-
-      <div class="grid">
-        <article class="card" id="bentimes">
-          <div class="slides cover shotcover" data-slides><img src="assets/bentimes-front.jpg" alt="The Ben Times front page: lead story, weather, homework, the week ahead and flagged emails (personal details blurred)" loading="lazy" class="on" /><img src="assets/bentimes-puzzles.jpg" alt="The Ben Times puzzles page with a word-ladder game open over a mini crossword and comic strip" loading="lazy" /><div class="dots"></div></div>
-          <div class="meta"><span class="tag">The Ben Times</span><span>Python</span><span>private</span></div>
-          <h3>A personal morning newspaper, with puzzles.</h3>
-          <p>A scheduled job reads my Gmail, Calendar, Notion and the weather; Claude writes the copy; it renders as a two-page broadsheet for an old iPad on my desk. It ends with a puzzles page (mini crossword, word ladder, jumble) that's playable on the iPad, and it falls back to a plain edition when the writer fails its checks.</p>
-        </article>
-        <article class="card" id="nfl">
-          <div class="cover nfl" aria-hidden="true"><svg viewBox="0 0 300 132" preserveAspectRatio="none"><polyline points="0,100 40,92 80,96 120,70 160,74 200,52 240,58 300,30" fill="none" stroke="#f4f1ea" stroke-width="2.5"/><polyline points="0,104 40,100 80,102 120,92 160,90 200,84 240,86 300,78" fill="none" stroke="rgba(244,241,234,.45)" stroke-width="1.5" stroke-dasharray="5 4"/></svg></div>
-          <div class="meta"><span class="tag">NFL Edge</span><span>Python</span><span>private</span></div>
-          <h3>Predicting games, tested against Vegas.</h3>
-          <p>A model of NFL game outcomes, backtested against historical betting lines to see where it would have found an edge, and where it wouldn't.</p>
-        </article>
-        <article class="card" id="board">
-          <div class="cover board" aria-hidden="true"><div><span class="mt">[Ben's Claude]</span> @agents plan is up: PR #2</div><div><span class="ma">[Ben's Antigravity]</span> reviewing #2</div><div><span class="mt">[Ben's Claude]</span> merged #14 → deploy 2/15</div><div style="color:#6f6b64">▍ tools/board wait…</div></div>
-          <div class="meta"><span class="tag">Agent board</span><span>Bash · GitHub</span><span>open source</span></div>
-          <h3>Getting AI agents to work as a team.</h3>
-          <p>A shared GitHub-issue "board" that lets several coding agents claim tasks, tag each other, review each other's PRs and hand off work. It's the system I used to run MindCode's build.</p>
-          <div class="links"><a href="https://github.com/Emeraldd123/MindCode/issues/1" target="_blank" rel="noopener">See the real board ↗</a></div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- RESEARCH -->
   <section class="hiring-box-wrap" aria-label="Hiring">
     <div class="wrap">
       <form id="li-box" class="li-box" hidden novalidate>
@@ -364,6 +297,7 @@
     </div>
   </section>
 
+  <!-- RESEARCH -->
   <section id="research">
     <div class="wrap">
       <div class="sec-head"><h2>Research</h2><p>neuroscience · ML · diagnostics</p></div>
@@ -377,7 +311,7 @@
         </article>
         <article class="card" id="emg">
           <div class="meta"><span class="tag brain">Neurotechnology</span><span>CMU · Beauchamp Lab · 2026–now</span></div>
-          <h3>Listening to motor neurons through the skin.</h3>
+          <h3>Reading motor neuron activity from surface EMG.</h3>
           <p>Recruited as a Pitt freshman to Dr. Drew Beauchamp's lab (Biomedical Engineering and the Neuroscience Institute). I decompose high-density surface EMG in MATLAB into individual motor-unit firing patterns, to understand how spinal motoneurons relate to signals from the cortex and subcortex.</p>
           <div class="links"><a href="https://beauchamplab.org/" target="_blank" rel="noopener">The lab ↗</a></div>
         </article>
@@ -390,6 +324,84 @@
       </div>
     </div>
   </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head"><h2>Selected work</h2><p>software projects</p></div>
+
+      <article class="feature" id="mindcode">
+        <a class="shot" href="https://mindcode1.netlify.app/api/sessions/458a2ac2-eb7/builds/b1/app" target="_blank" rel="noopener"><video src="assets/mindcode-demo.mp4" poster="assets/mindcode-demo-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="MindCode demo: a prompt becomes a map of 34 bubbles, one is approved, the app is built, and hovering its parts lights up the bubbles that caused them" style="display:block;width:100%"></video></a>
+        <div>
+          <div class="meta"><span class="tag">MindCode</span><span>Nov 2026</span><span>NOVA hackathon · ScottyLabs, CMU</span><span>Team lead</span></div>
+          <h3>A hackathon project about what AI assumes when it builds an app.</h3>
+          <p>If you ask an AI to build an app, it fills in a lot of decisions you never mentioned: the colors, the pages, the database. MindCode lists those decisions as a map of bubbles. You can see which ones you said and which ones Claude assumed, change them, and then build. Afterwards you can click any part of the finished site and see which bubble caused it.</p>
+          <ul class="points">
+            <li>I came up with the Design / Audience / Functionality / Cost structure that every plan follows.</li>
+            <li>I led four teammates and three AI coding agents (Claude Code, Antigravity and Jules), coordinating through a shared GitHub task board and a limited deploy budget.</li>
+            <li>Right-clicking part of the built site to change it takes about 7 seconds, and small changes to the plan rebuild in about 20.</li>
+          </ul>
+          <div class="links"><a href="https://mindcode1.netlify.app/api/sessions/458a2ac2-eb7/builds/b1/app" target="_blank" rel="noopener">See the app it built ↗</a><a href="https://mindcode1.netlify.app/?demo=1" target="_blank" rel="noopener">Try MindCode ↗</a><a href="https://github.com/Emeraldd123/MindCode" target="_blank" rel="noopener">Code ↗</a></div>
+        </div>
+      </article>
+
+      <article class="feature" id="pipit">
+        <a class="shot" href="https://bensnotes.netlify.app" target="_blank" rel="noopener"><video src="assets/notes-demo.mp4" poster="assets/notes-demo-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Ben's Notes demo: handwritten maths, then a graph block plotting two curves and a rotating 3D surface" style="display:block;width:100%"></video></a>
+        <div>
+          <div class="meta"><span class="tag">Ben's Notes</span><span>2026</span><span>TypeScript · PWA · 72 commits</span><span>Solo</span></div>
+          <h3>A handwriting notebook for the iPad that checks your work.</h3>
+          <p>You write with an Apple Pencil. The app reads your handwriting, checks each line of math, and marks mistakes on the page. It also makes flashcards and practice exams from your notes. Everything is stored on the device, with no account and no server. In the code it's called Pipit Notes.</p>
+          <ul class="points">
+            <li>Checking: an AI model reads each handwritten line, and SymPy running in the browser (through Pyodide) verifies the algebra step by step. Mistakes are highlighted with what went wrong and a fix.</li>
+            <li>Practice exams: it writes timed papers from your notes and course PDFs, including graphs and diagrams cut from your own PDFs, and marks them against a marking scheme.</li>
+            <li>Studying: flashcards use FSRS-5, the spaced-repetition scheduler Anki uses, plus short lessons and concept maps you can test yourself on.</li>
+          </ul>
+          <div class="links"><a href="https://bensnotes.netlify.app" target="_blank" rel="noopener">Open the app ↗</a><a href="https://github.com/Emeraldd123/pipit-notes" target="_blank" rel="noopener">Code ↗</a></div>
+        </div>
+      </article>
+
+
+      <article class="feature" id="finance">
+        <div class="shot"><video src="assets/finance-demo.mp4" poster="assets/finance-demo-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Pipit Finance tour on a demo account: accounts and cash forecast, transactions, year-to-date cash flow, investments heatmap, insights and goals" style="display:block;width:100%"></video></div>
+        <div>
+          <div class="meta"><span class="tag">Pipit Finance</span><span>2026</span><span>Next.js · Prisma · Postgres</span><span>Solo · private</span></div>
+          <h3>A budgeting app that connects to real bank accounts.</h3>
+          <p>Something like Monarch or Copilot: accounts, transactions, budgets, investments, goals and reports. I built it alone, and it comes to about 440 files and 88 commits. Banks connect through Plaid and subscriptions go through Stripe.</p>
+          <ul class="points">
+            <li>Bank sync: transactions sync incrementally through Plaid. Access tokens are encrypted at rest (AES-256-GCM) and webhooks are signature-verified.</li>
+            <li>Logins use NextAuth with optional TOTP two-factor, rate limiting, and Zod validation on server input.</li>
+            <li>A rules engine categorizes transactions. The app also detects recurring charges, tracks budgets and shared goals, and forecasts cash balances and net worth.</li>
+            <li>Reports: Sankey cash-flow charts, spending reports, salary benchmarks, CSV import and export, and scheduled alert emails through Resend.</li>
+          </ul>
+          <div class="links"><span class="private-note">Private repo: code walkthrough on request</span></div>
+        </div>
+      </article>
+
+      <div class="grid">
+        <article class="card" id="bentimes">
+          <div class="slides cover shotcover" data-slides><img src="assets/bentimes-front.jpg" alt="The Ben Times front page: lead story, weather, homework, the week ahead and flagged emails (personal details blurred)" loading="lazy" class="on" /><img src="assets/bentimes-puzzles.jpg" alt="The Ben Times puzzles page with a word-ladder game open over a mini crossword and comic strip" loading="lazy" /><div class="dots"></div></div>
+          <div class="meta"><span class="tag">The Ben Times</span><span>Python</span><span>private</span></div>
+          <h3>A morning newspaper for my iPad.</h3>
+          <p>Every morning a script reads my Gmail, calendar, Notion and the weather, Claude writes the stories, and it comes out as a two-page broadsheet on an old iPad on my desk. The second page has puzzles: a mini crossword, a word ladder and a jumble. If the writing step fails its checks, it prints a plainer edition instead.</p>
+        </article>
+        <article class="card" id="nfl">
+          <div class="cover nfl" aria-hidden="true"><svg viewBox="0 0 300 132" preserveAspectRatio="none"><polyline points="0,100 40,92 80,96 120,70 160,74 200,52 240,58 300,30" fill="none" stroke="#f4f1ea" stroke-width="2.5"/><polyline points="0,104 40,100 80,102 120,92 160,90 200,84 240,86 300,78" fill="none" stroke="rgba(244,241,234,.45)" stroke-width="1.5" stroke-dasharray="5 4"/></svg></div>
+          <div class="meta"><span class="tag">NFL Edge</span><span>Python</span><span>private</span></div>
+          <h3>Can a model beat the betting lines?</h3>
+          <p>I trained a model on NFL game outcomes and backtested it against historical betting lines, to see where it finds an edge and where it doesn't.</p>
+        </article>
+        <article class="card" id="board">
+          <div class="cover board" aria-hidden="true"><div><span class="mt">[Ben's Claude]</span> @agents plan is up: PR #2</div><div><span class="ma">[Ben's Antigravity]</span> reviewing #2</div><div><span class="mt">[Ben's Claude]</span> merged #14 → deploy 2/15</div><div style="color:#6f6b64">▍ tools/board wait…</div></div>
+          <div class="meta"><span class="tag">Agent board</span><span>Bash · GitHub</span><span>open source</span></div>
+          <h3>How I coordinated AI agents on MindCode.</h3>
+          <p>A shared GitHub issue where coding agents claim tasks, tag each other, review each other's pull requests and hand off work. I used it to run MindCode's build.</p>
+          <div class="links"><a href="https://github.com/Emeraldd123/MindCode/issues/1" target="_blank" rel="noopener">See the real board ↗</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+
 
   <!-- EXPERIENCE -->
   <section id="experience">
@@ -422,8 +434,8 @@
     <div class="wrap about">
       <div>
         <div class="sec-head"><h2>About</h2></div>
-        <p>I'm studying neuroscience (bioengineering minor) at the University of Pittsburgh in the Frederick Honors College. I'm drawn to the place where biology meets computation: decoding what the nervous system is doing, and building tools that make complex systems, from muscles to AI models, easier to understand.</p>
-        <p>Outside the lab I build things I actually use every day, I mentor students through research and pre-med paths, and I'll organize a relief effort when my community needs one.</p>
+        <p>I'm a neuroscience student (bioengineering minor) at the University of Pittsburgh, in the Frederick Honors College. I joined Dr. Beauchamp's lab at CMU as a freshman to work on high-density EMG. Before college I did Parkinson's gait research at UT Austin and worked at Babson Diagnostics in Austin.</p>
+        <p>I also run Kadison Research, which mentors high school students on research and pre-med paths, and last summer I coordinated supplies and volunteers after the Central Texas floods.</p>
       </div>
       <div>
         <h5>Computational</h5>
@@ -440,7 +452,7 @@
 <footer id="contact">
   <div class="wrap">
     <div>
-      <div class="big">Let's talk research,<br />or build something.</div>
+      <div class="big">Hiring, or want to talk research?<br />Get in touch.</div>
       <div class="links" style="margin-top:18px"><a href="mailto:bek229@pitt.edu">bek229@pitt.edu</a><a href="https://www.linkedin.com/in/benkadison/" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://github.com/Emeraldd123" target="_blank" rel="noopener">GitHub ↗</a><a href="assets/Ben-Kadison-Resume.pdf" data-track="resume" target="_blank" rel="noopener">Resume (PDF) ↓</a></div>
       <button id="hi-open" class="btn primary hi-open" type="button" hidden>Hiring? Say hi →</button>
     </div>
@@ -581,6 +593,15 @@ document.querySelectorAll('[data-slides]').forEach(function (box) {
     es.forEach(function (e) { if (e.isIntersecting) { var pr = e.target.play(); if (pr && pr.catch) pr.catch(function () {}); } else e.target.pause(); });
   }, { threshold: 0.25 });
   vids.forEach(function (v) { io.observe(v); });
+})();
+</script>
+<nav class="mobile-bar" aria-label="Contact"><a href="assets/Ben-Kadison-Resume.pdf" data-track="resume" target="_blank" rel="noopener">Resume</a><a href="https://www.linkedin.com/in/benkadison/" target="_blank" rel="noopener">LinkedIn</a><a href="mailto:bek229@pitt.edu">Email</a></nav>
+<script>
+(function () {
+  var b = document.querySelector(".mobile-bar"), f = document.getElementById("contact");
+  if (!b) return;
+  function u() { var atFoot = f && f.getBoundingClientRect().top < innerHeight - 40; b.classList.toggle("show", scrollY > 600 && !atFoot); }
+  addEventListener("scroll", u, { passive: true }); u();
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>

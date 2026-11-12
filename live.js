@@ -87,7 +87,13 @@
 
     // Sections and projects seen (once each, after 1.5 s in view)
     var seen = {};
-    var ids = ['work', 'mindcode', 'pipit', 'finance', 'bentimes', 'nfl', 'board', 'research', 'fog', 'emg', 'babson', 'experience', 'about', 'contact'];
+    var ids = ['work', 'mindcode', 'pipit', 'finance', 'bentimes', 'nfl', 'board', 'research', 'fog', 'emg', 'babson', 'experience', 'about', 'li-box', 'contact'];
+
+    // Did they notice / start the LinkedIn box or open the Say-hi form?
+    var lif = document.querySelector('#li-box input');
+    if (lif) lif.addEventListener('focus', function () { track('click', { target: 'linkedin-box-focus' }); }, { once: true });
+    var hio = document.getElementById('hi-open');
+    if (hio) hio.addEventListener('click', function () { track('click', { target: 'say-hi-open' }); });
 
     // Dwell time: seconds each section/project spends at least 35% on screen while the tab is visible.
     var visible = {};
