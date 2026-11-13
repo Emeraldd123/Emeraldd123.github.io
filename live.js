@@ -25,11 +25,11 @@
   // Personal tracking links: ?ref=<tag> (made with backend/link.cjs). The tag is remembered on this
   // device (first link wins) so later direct visits still attribute to it, and it is removed from
   // the address bar so a forwarded link doesn't get credited to the wrong person.
-  var refNow = (qs.get('ref') || '').replace(/[^\w.-]/g, '').slice(0, 80);
+  var refNow = (qs.get('ref') || qs.get('utm_source') || '').replace(/[^\w.-]/g, '').slice(0, 80);
   var refFirst = get('localStorage', 'pf_ref') || refNow;
   if (refNow && !get('localStorage', 'pf_ref')) set('localStorage', 'pf_ref', refNow);
   if (refNow && history.replaceState) {
-    qs.delete('ref');
+    qs.delete('ref'); qs.delete('utm_source');
     var rest = qs.toString();
     history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
   }

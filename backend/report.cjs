@@ -27,6 +27,7 @@ const meOnly = process.argv.includes('--me'); // show only Ben's own visits inst
   await c.end();
 
   // Crawlers and link-preview fetchers: gone in under 5 s, saw nothing, clicked nothing. Hidden unless --with-bots.
+  for (const x of allRows) { const m = !x.ref && /(?:^|&)source=([^&]+)/.exec(x.utm || ''); if (m) { x.ref = m[1]; x.warm_lead = true; } }
   const isBot = (x) => (x.seconds_on_site || 0) < 5 && !x.sections_seen && !x.clicked && !x.intro_linkedin && !x.intro_name;
   const bots = allRows.filter(isBot);
   const rows = process.argv.includes('--with-bots') ? allRows : allRows.filter((x) => !isBot(x));
